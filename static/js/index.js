@@ -124,11 +124,15 @@ $(document).ready(function() {
 
     var options = {
 		slidesToScroll: 1,
-		slidesToShow: 1,
+		slidesToShow: 3,
 		loop: true,
 		infinite: true,
 		autoplay: true,
 		autoplaySpeed: 5000,
+		breakpoints: [
+			{ changePoint: 768, slidesToShow: 1, slidesToScroll: 1 },
+			{ changePoint: 1024, slidesToShow: 2, slidesToScroll: 1 }
+		]
     }
 
 	// Initialize all div with carousel class
