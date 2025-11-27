@@ -176,26 +176,23 @@
         "name": "Video Generation"
       },
       {
-        "@type": "Thing", 
+        "@type": "Thing",
         "name": "Flow Matching"
       }
     ]
   }
   </script>
-  
-  <!-- Website/Organization Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "FAIR at Meta & Inria",
-    "url": "https://ai.meta.com/research/",
-    "logo": "https://YOUR_DOMAIN.com/static/images/favicon.ico",
-    "sameAs": [
-      "https://twitter.com/MetaAI",
-      "https://github.com/facebookresearch"
-    ]
-  }
+
+  <!-- MathJax config + loader -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
   </script>
 </head>
 <body>
@@ -326,7 +323,7 @@
         <img src="static/images/flowception_schedule.jpg" alt="Flowception extended time scheduler illustration" loading="lazy"/>
       </div>
       <h2 class="subtitle has-text-centered" style="margin-top: 1.5rem;">
-        Illustration of the extended time scheduler for Flowception training. In Flowception, each frame has its own denoising time which depends on its insertion time. The global extended time τg progresses from 0 to 2, where insertion of new frames only occur when τg < 1. Starting frames (in blue) are instantiated at τg = 0, other frames (in orange) are inserted later (when τg > 0) and thus have a delay. With a linear scheduler, the insertion delays follow a uniform distribution.
+        Illustration of the extended time scheduler for Flowception training. In Flowception, each frame has its own denoising time which depends on its insertion time. The global extended time $\tau_g$ progresses from $0$ to $2$, where insertion of new frames only occur when $\tau_g < 1$. Starting frames (in blue) are instantiated at $\tau_g = 0$, other frames (in orange) are inserted later (when $τg > 0$) and thus have a delay. With a linear scheduler, the insertion delays follow a uniform distribution.
       </h2>
     </div>
   </div>
@@ -338,6 +335,30 @@
   <div class="hero-body">
     <div class="container is-max-desktop">
       <h2 class="title is-3">Comparing methodologies</h2>
+
+      <div class="columns is-vcentered is-variable is-6">
+      <!-- Figure column -->
+      <div class="column is-narrow">
+        <div class="publication-banner">
+          <figure class="image" style="max-width: 300px; margin: 0 auto;">
+            <img src="static/animations/flowception_extended_and_visible.gif"
+                alt="Flowception extended time scheduler illustration"
+                loading="lazy">
+          </figure>
+        </div>
+      </div>
+
+      <!-- Text column -->
+      <div class="column">
+        <h2 class="subtitle" style="margin-top: 0;">
+          Starting from a small set of frames, Flowception learns to flow existing frames while
+          potentially inserting new frames anywhere in the sequence.
+          Since the latest insertions happens at \( \tau_g = 1 \), the maximum number of steps
+          is capped to \( \frac{2}{h} \) where \( h \) is the sampling step size.
+        </h2>
+      </div>
+    </div>
+
 
       <div class="columns is-vcentered is-centered">
         <div class="column is-one-third publication-banner">
@@ -359,9 +380,6 @@
         </div>
       </div>
 
-      <h2 class="subtitle has-text-centered" style="margin-top: 1.5rem;">
-        Comparison of different video generation methodologies.
-      </h2>
     </div>
   </div>
 </section>
