@@ -1,0 +1,6 @@
+<!-- Save the Inria logo SVG here -->
+<!-- Download from: https://www.inria.fr/en/inria-logo -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60">
+  <text x="10" y="40" font-family="Arial" font-size="30" fill="#E2001A">Inria</text>
+</svg>
+

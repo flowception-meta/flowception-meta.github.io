@@ -8,7 +8,7 @@
   <meta name="title" content="Flowception: Temporally Expansive Flow Matching for Video Generation - Berrada Ifriqi et al.">
   <meta name="description" content="A novel non-autoregressive and variable-length video generation framework that interleaves discrete frame insertions with continuous frame denoising.">
   <meta name="keywords" content="video generation, flow matching, non-autoregressive, frame insertion, video synthesis, generative models, machine learning, computer vision, AI">
-  <meta name="author" content="Tariq Berrada Ifriqi, John Nguyen, Karteek Alahari, Jakob Verbeek, Ricky Chen">
+  <meta name="author" content="Tariq Berrada Ifriqi, John Nguyen, Karteek Alahari, Jakob Verbeek, Ricky T. Q. Chen">
   <meta name="robots" content="index, follow">
   <meta name="language" content="English">
   
@@ -45,7 +45,7 @@
   <meta name="citation_author" content="Nguyen, John">
   <meta name="citation_author" content="Alahari, Karteek">
   <meta name="citation_author" content="Verbeek, Jakob">
-  <meta name="citation_author" content="Chen, Ricky">
+  <meta name="citation_author" content="Chen, Ricky T. Q.">
   <meta name="citation_publication_date" content="2024">
   <meta name="citation_conference_title" content="CONFERENCE_NAME">
   <meta name="citation_pdf_url" content="https://YOUR_DOMAIN.com/static/pdfs/paper.pdf">
@@ -62,8 +62,14 @@
   <link rel="preconnect" href="https://ajax.googleapis.com">
   <link rel="preconnect" href="https://documentcloud.adobe.com">
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
-
-
+  
+  <!-- Preload critical GIFs for faster initial display -->
+  <link rel="preload" as="image" href="static/animations/flowception_extended_and_visible.gif">
+  <link rel="preload" as="image" href="static/animations/full_sequence_flows.gif">
+  <link rel="preload" as="image" href="static/animations/autoregressive_flows.gif">
+  <link rel="preload" as="image" href="static/animations/flowception_visible_schedule.gif">
+  <link rel="preload" as="image" href="static/videos/kinetics_interp_0.gif">
+  
   <title>Flowception: Temporally Expansive Flow Matching for Video Generation - Berrada Ifriqi et al. | Academic Research</title>
   
   <!-- Favicon and App Icons -->
@@ -147,7 +153,7 @@
       },
       {
         "@type": "Person",
-        "name": "Ricky Chen",
+        "name": "Ricky T. Q. Chen",
         "affiliation": {
           "@type": "Organization",
           "name": "FAIR at Meta"
@@ -215,13 +221,13 @@
               <span class="author-block">
                 <a href="#" target="_blank">Tariq Berrada Ifriqi</a><sup>1,2</sup>,</span>
                 <span class="author-block">
-                  <a href="#" target="_blank">John Nguyen</a><sup>1</sup>,</span>
+                  <a href="https://johnlnguyen.com/" target="_blank">John Nguyen</a><sup>1</sup>,</span>
                   <span class="author-block">
-                    <a href="#" target="_blank">Karteek Alahari</a><sup>2</sup>,</span>
+                    <a href="https://lear.inrialpes.fr/people/alahari/" target="_blank">Karteek Alahari</a><sup>2</sup>,</span>
                   <span class="author-block">
                     <a href="#" target="_blank">Jakob Verbeek</a><sup>1</sup>,</span>
                   <span class="author-block">
-                    <a href="#" target="_blank">Ricky Chen</a><sup>1</sup>
+                    <a href="https://rtqichen.github.io/" target="_blank">Ricky T. Q. Chen</a><sup>1</sup>
                   </span>
                   </div>
 
@@ -241,17 +247,6 @@
                         <span>Paper</span>
                       </a>
                     </span>
-
-                    <!-- TODO: Add your supplementary material PDF or remove this section -->
-                    <span class="link-block">
-                      <a href="static/pdfs/supplementary_material.pdf" target="_blank"
-                      class="external-link button is-normal is-rounded is-dark">
-                      <span class="icon">
-                        <i class="fas fa-file-pdf"></i>
-                      </span>
-                      <span>Supplementary</span>
-                    </a>
-                  </span>
 
                   <!-- TODO: Replace with your GitHub repository URL -->
 <!--                  <span class="link-block">
@@ -344,7 +339,8 @@
           <figure class="image" style="max-width: 300px; margin: 0 auto;">
             <img src="static/animations/flowception_extended_and_visible.gif"
                 alt="Flowception extended time scheduler illustration"
-                loading="lazy">
+                loading="eager"
+                fetchpriority="high">
           </figure>
         </div>
       </div>
@@ -367,20 +363,23 @@
       <div class="columns is-vcentered is-centered">
         <div class="column is-one-third publication-banner">
           <img src="static/animations/full_sequence_flows.gif"
-               alt="Flowception extended time scheduler illustration"
-               loading="lazy"/>
+               alt="Full sequence flows"
+               loading="eager"
+               fetchpriority="high">
         </div>
 
         <div class="column is-one-third publication-banner">
           <img src="static/animations/autoregressive_flows.gif"
-               alt="Flowception extended time scheduler illustration"
-               loading="lazy"/>
+               alt="Autoregressive flows"
+               loading="eager"
+               fetchpriority="high">
         </div>
 
         <div class="column is-one-third publication-banner">
           <img src="static/animations/flowception_visible_schedule.gif"
-               alt="Flowception extended time scheduler illustration"
-               loading="lazy"/>
+               alt="Flowception visible schedule"
+               loading="eager"
+               fetchpriority="high">
         </div>
       </div>
 
@@ -428,49 +427,49 @@
       <h2 class="title is-3">Examples</h2>
       <div id="examples-carousel" class="carousel results-carousel">
         <div class="item item-video1">
-          <img src="static/videos/kinetics_interp_0.gif" alt="Kinetics interpolation result 1" loading="lazy"/>
+          <img src="static/videos/kinetics_interp_0.gif" alt="Kinetics interpolation result 1" loading="eager" fetchpriority="high">
         </div>
         <div class="item item-video2">
-          <img src="static/videos/kinetics_interp_1.gif" alt="Kinetics interpolation result 2" loading="lazy"/>
+          <img src="static/videos/kinetics_interp_1.gif" alt="Kinetics interpolation result 2" loading="eager">
         </div>
         <div class="item item-video3">
-          <img src="static/videos/kinetics_interp_2.gif" alt="Kinetics interpolation result 3" loading="lazy"/>
+          <img src="static/videos/kinetics_interp_2.gif" alt="Kinetics interpolation result 3" loading="eager">
         </div>
         <div class="item item-video4">
-          <img src="static/videos/kinetics_interp_3.gif" alt="Kinetics interpolation result 4" loading="lazy"/>
+          <img src="static/videos/kinetics_interp_3.gif" alt="Kinetics interpolation result 4" loading="eager">
         </div>
         <div class="item item-video5">
-          <img src="static/videos/kinetics_interp_4.gif" alt="Kinetics interpolation result 5" loading="lazy"/>
+          <img src="static/videos/kinetics_interp_4.gif" alt="Kinetics interpolation result 5" loading="eager">
         </div>
         <div class="item item-video6">
-          <img src="static/videos/re10k_interp_0.gif" alt="RE10K interpolation result 1" loading="lazy"/>
+          <img src="static/videos/re10k_interp_0.gif" alt="RE10K interpolation result 1" loading="eager">
         </div>
         <div class="item item-video7">
-          <img src="static/videos/re10k_interp_1.gif" alt="RE10K interpolation result 2" loading="lazy"/>
+          <img src="static/videos/re10k_interp_1.gif" alt="RE10K interpolation result 2" loading="eager">
         </div>
         <div class="item item-video8">
-          <img src="static/videos/re10k_interp_2.gif" alt="RE10K interpolation result 3" loading="lazy"/>
+          <img src="static/videos/re10k_interp_2.gif" alt="RE10K interpolation result 3" loading="eager">
         </div>
         <div class="item item-video9">
-          <img src="static/videos/re10k_interp_3.gif" alt="RE10K interpolation result 4" loading="lazy"/>
+          <img src="static/videos/re10k_interp_3.gif" alt="RE10K interpolation result 4" loading="eager">
         </div>
         <div class="item item-video10">
-          <img src="static/videos/re10k_interp_4.gif" alt="RE10K interpolation result 5" loading="lazy"/>
+          <img src="static/videos/re10k_interp_4.gif" alt="RE10K interpolation result 5" loading="eager">
         </div>
         <div class="item item-video11">
-          <img src="static/videos/taichi_i2v_0.gif" alt="Taichi image-to-video result 1" loading="lazy"/>
+          <img src="static/videos/taichi_i2v_0.gif" alt="Taichi image-to-video result 1" loading="eager">
         </div>
         <div class="item item-video12">
-          <img src="static/videos/taichi_i2v_1.gif" alt="Taichi image-to-video result 2" loading="lazy"/>
+          <img src="static/videos/taichi_i2v_1.gif" alt="Taichi image-to-video result 2" loading="eager">
         </div>
         <div class="item item-video13">
-          <img src="static/videos/taichi_i2v_2.gif" alt="Taichi image-to-video result 3" loading="lazy"/>
+          <img src="static/videos/taichi_i2v_2.gif" alt="Taichi image-to-video result 3" loading="eager">
         </div>
         <div class="item item-video14">
-          <img src="static/videos/taichi_i2v_3.gif" alt="Taichi image-to-video result 4" loading="lazy"/>
+          <img src="static/videos/taichi_i2v_3.gif" alt="Taichi image-to-video result 4" loading="eager">
         </div>
         <div class="item item-video15">
-          <img src="static/videos/taichi_i2v_4.gif" alt="Taichi image-to-video result 5" loading="lazy"/>
+          <img src="static/videos/taichi_i2v_4.gif" alt="Taichi image-to-video result 5" loading="eager">
         </div>
       </div>
     </div>
@@ -498,7 +497,7 @@
       </div>
       <pre id="bibtex-code"><code>@article{BerradadIfriqi2025Flowception,
   title={Flowception: Temporally Expansive Flow Matching for Video Generation},
-  author={Berrada Ifriqi, Tariq and Nguyen, John and Alahari, Karteek and Verbeek, Jakob and Chen, Ricky},
+  author={Berrada Ifriqi, Tariq and Nguyen, John and Alahari, Karteek and Verbeek, Jakob and Chen, T.Q, Ricky},
 	  journal={arXiv preprint},
 	  volume = {},
   year={2025},
@@ -507,25 +506,6 @@
     </div>
 </section>
 <!--End BibTex citation -->
-
-
-  <footer class="footer">
-  <div class="container">
-    <div class="columns is-centered">
-      <div class="column is-8">
-        <div class="content">
-
-          <p>
-            This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
-            You are free to borrow the source code of this website, we just ask that you link back to this page in the footer. <br> This website is licensed under a <a rel="license"  href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative
-            Commons Attribution-ShareAlike 4.0 International License</a>.
-          </p>
-
-        </div>
-      </div>
-    </div>
-  </div>
-</footer>
 
 <!-- Statcounter tracking code -->
   

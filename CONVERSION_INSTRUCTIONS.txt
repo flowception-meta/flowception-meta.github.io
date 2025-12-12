@@ -1,0 +1,63 @@
+GIF to MP4/WebM Conversion Instructions
+========================================
+
+STEP 1: Install ffmpeg (if not already installed)
+--------------------------------------------------
+Run this command:
+    brew install ffmpeg
+
+STEP 2: Convert all GIFs to MP4/WebM
+-------------------------------------
+Run this command:
+    ./convert_gifs.sh
+
+This will:
+- Convert all 15 GIFs in static/videos/ to MP4 and WebM
+- Convert all 4 GIFs in static/animations/ to MP4 and WebM
+- Show file size comparisons
+- Typical reduction: 80-95% smaller files!
+
+STEP 3: Update HTML (OPTIONAL - Automatic Method)
+--------------------------------------------------
+Run this command:
+    python3 update_html_for_videos.py
+
+This will:
+- Create index.html.new with all <img> tags converted to <video> tags
+- Keep GIFs as fallback for older browsers
+
+Then review and apply:
+    diff index.html index.html.new
+    mv index.html.new index.html
+
+STEP 3 (ALTERNATIVE - Manual Method)
+-------------------------------------
+Replace each <img> tag manually:
+
+FROM:
+  <img src="static/videos/kinetics_interp_0.gif" alt="..." loading="eager"/>
+
+TO:
+  <video autoplay loop muted playsinline preload="auto">
+    <source src="static/videos/kinetics_interp_0.webm" type="video/webm">
+    <source src="static/videos/kinetics_interp_0.mp4" type="video/mp4">
+    <img src="static/videos/kinetics_interp_0.gif" alt="..." loading="eager"/>
+  </video>
+
+STEP 4: Test
+------------
+Open index.html in your browser and verify all videos play correctly.
+
+STEP 5: Clean up (OPTIONAL)
+----------------------------
+If everything works, you can delete the original GIFs to save space:
+    rm static/videos/*.gif
+    rm static/animations/*.gif
+
+Expected Results:
+-----------------
+- 80-95% reduction in file size
+- Faster page load times
+- Better video quality
+- Better browser performance
+

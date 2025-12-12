@@ -90,6 +90,35 @@ window.addEventListener('scroll', function() {
     }
 });
 
+// Intelligent GIF preloading for faster perceived load times
+function setupGifPreloading() {
+    const lazyGifs = document.querySelectorAll('img[loading="lazy"][src$=".gif"]');
+    
+    if ('IntersectionObserver' in window && lazyGifs.length > 0) {
+        const gifObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    // Preload the GIF before it fully enters viewport
+                    if (!img.dataset.preloaded) {
+                        img.dataset.preloaded = 'true';
+                        // Create a new image to trigger browser caching
+                        const preloadImg = new Image();
+                        preloadImg.src = img.src;
+                    }
+                }
+            });
+        }, {
+            rootMargin: '200px', // Start loading 200px before entering viewport
+            threshold: 0.01
+        });
+        
+        lazyGifs.forEach(gif => {
+            gifObserver.observe(gif);
+        });
+    }
+}
+
 // Video carousel autoplay when in view
 function setupVideoCarouselAutoplay() {
     const carouselVideos = document.querySelectorAll('.results-carousel video');
@@ -142,5 +171,8 @@ $(document).ready(function() {
     
     // Setup video autoplay for carousel
     setupVideoCarouselAutoplay();
+    
+    // Setup intelligent GIF preloading
+    setupGifPreloading();
 
 })
