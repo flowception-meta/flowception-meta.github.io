@@ -753,3 +753,17 @@ a:focus {
 
 
 
+/* Remove card-like shadow around figures */
+.publication-banner,
+.publication-banner img,
+.publication-banner figure,
+.publication-banner .image,
+.publication-banner video {
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+#main-content img {
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 12px;
+}

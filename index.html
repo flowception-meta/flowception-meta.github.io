@@ -318,12 +318,22 @@
 <section class="hero is-small is-light">
   <div class="hero-body">
     <div class="container is-max-desktop">
-      <h2 class="title is-3">Method Overview</h2>
+      <h2 class="title is-3 has-text-centered">Method Overview</h2>
       <div class="publication-banner">
-        <img src="static/images/flowception_schedule.jpg" alt="Flowception extended time scheduler illustration" loading="lazy"/>
+        <figure class="image" style="max-width: 500px; margin: 0 auto;">
+          <img src="static/images/flowception_schedule.jpg" alt="Flowception extended time scheduler illustration" loading="lazy"/>
+        </figure>
       </div>
       <h2 class="subtitle has-text-centered" style="margin-top: 1.5rem;">
         Illustration of the extended time scheduler for Flowception training. In Flowception, each frame has its own denoising time which depends on its insertion time. The global extended time $\tau_g$ progresses from $0$ to $2$, where insertion of new frames only occur when $\tau_g < 1$. Starting frames (in blue) are instantiated at $\tau_g = 0$, other frames (in orange) are inserted later (when $τg > 0$) and thus have a delay. With a linear scheduler, the insertion delays follow a uniform distribution.
+      </h2>
+      <div class="publication-banner">
+        <figure class="image" style="max-width: 500px; margin: 0 auto;">
+          <img src="static/animations/flowception_sampling.gif" alt="Flowception extended time scheduler illustration" loading="lazy"/>
+        </figure>
+      </div>
+      <h2 class="subtitle has-text-centered" style="margin-top: 1.5rem;">
+        Flowception sampling starts from a small number of frames, each step interleaves velocity updates (denoising) and predicted frame insertions we illsutrate the noise level of each frame by the lightness of its color.
       </h2>
     </div>
   </div>
@@ -334,7 +344,7 @@
 <section class="hero is-small is-light">
   <div class="hero-body">
     <div class="container is-max-desktop">
-      <h2 class="title is-3">Comparing methodologies</h2>
+      <h2 class="title is-3 has-text-centered">Comparing methodologies</h2>
 
       <div class="columns is-vcentered is-variable is-6">
       <!-- Figure column -->
@@ -356,7 +366,7 @@
           Since the latest insertions happens at \( \tau_g = 1 \), the maximum number of steps
           is capped to \( \frac{2}{h} \) where \( h \) is the sampling step size.<br>
           During training, frames are deleted with uniform probability in $[-1,0]$, and each existing frame predicts the missing number of frames in the gap with its sucessor.<br>
-          
+          The missing number of frames is directly related to the insertion rate, hence the probability of insertion during each step in the sampling process.
         </h2>
       </div>
     </div>
@@ -393,7 +403,7 @@
 <section class="hero is-small is-light">
   <div class="hero-body">
     <div class="container is-max-desktop">
-      <h2 class="title is-3">Capabilities</h2>
+      <h2 class="title is-3 has-text-centered">Capabilities</h2>
 
       <div class="columns is-vcentered is-variable is-6">
       <!-- Figure column -->
@@ -415,6 +425,27 @@
         </h2>
       </div>
     </div>
+    
+
+    <div class="columns is-vcentered is-variable is-6">
+      <!-- Figure column -->
+      <div class="column is-narrow">
+        <div class="publication-banner">
+          <figure class="image" style="max-width: 400px; margin: 0 auto;">
+            <img src="static/images/toy_length.png"
+                alt="Flowception capabilities"
+                loading="lazy">
+          </figure>
+        </div>
+      </div>
+
+      <!-- Text column -->
+      <div class="column">
+        <h2 class="subtitle" style="margin-top: 0;">
+          Flowception is also able to learn a valid distribution over video lengths, hence the model can be trained with a mix of short and long videos and generalize during sampling such that the video length is induced from its content.
+      We veify this in a toy example where trainng videos only have lengths 15, 20, 25 or 30 then plot the histogram of both ground truth and generated video lengths.
+        </h2>
+      </div>
   </div>
 </section>
 
@@ -424,7 +455,7 @@
 <section class="hero is-small">
   <div class="hero-body">
     <div class="container">
-      <h2 class="title is-3">Examples</h2>
+      <h2 class="title is-3 has-text-centered">Examples</h2>
       <div id="examples-carousel" class="carousel results-carousel">
         <div class="item item-video1">
           <img src="static/videos/kinetics_interp_0.gif" alt="Kinetics interpolation result 1" loading="lazy"/>
