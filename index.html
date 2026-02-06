@@ -5,549 +5,941 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   
   <!-- Primary Meta Tags -->
-  <meta name="title" content="Flowception: Temporally Expansive Flow Matching for Video Generation - Berrada Ifriqi et al.">
+  <meta name="title" content="Flowception: Temporally Expansive Flow Matching for Video Generation">
   <meta name="description" content="A novel non-autoregressive and variable-length video generation framework that interleaves discrete frame insertions with continuous frame denoising.">
   <meta name="keywords" content="video generation, flow matching, non-autoregressive, frame insertion, video synthesis, generative models, machine learning, computer vision, AI">
   <meta name="author" content="Tariq Berrada Ifriqi, John Nguyen, Karteek Alahari, Jakob Verbeek, Ricky T. Q. Chen">
-  <meta name="robots" content="index, follow">
-  <meta name="language" content="English">
   
-  <!-- Open Graph / Facebook -->
+  <!-- Open Graph -->
   <meta property="og:type" content="article">
-  <meta property="og:site_name" content="FAIR at Meta & Inria">
   <meta property="og:title" content="Flowception: Temporally Expansive Flow Matching for Video Generation">
   <meta property="og:description" content="A novel non-autoregressive and variable-length video generation framework that interleaves discrete frame insertions with continuous frame denoising.">
-  <!-- TODO: Replace with your actual website URL -->
-  <meta property="og:url" content="https://YOUR_DOMAIN.com/YOUR_PROJECT_PAGE">
-  <!-- TODO: Create a 1200x630px preview image and update path -->
-  <meta property="og:image" content="https://YOUR_DOMAIN.com/static/images/social_preview.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Flowception: Temporally Expansive Flow Matching for Video Generation - Research Preview">
-  <meta property="article:published_time" content="2024-01-01T00:00:00.000Z">
-  <meta property="article:author" content="Tariq Berrada Ifriqi">
-  <meta property="article:section" content="Research">
-  <meta property="article:tag" content="video generation">
-  <meta property="article:tag" content="flow matching">
-
+  <meta property="og:url" content="https://flowception-meta.github.io">
+  <meta property="og:image" content="https://flowception-meta.github.io/static/images/main_fig2.jpg">
+  
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:site" content="@MetaAI">
-  <meta name="twitter:creator" content="@MetaAI">
   <meta name="twitter:title" content="Flowception: Temporally Expansive Flow Matching for Video Generation">
-  <meta name="twitter:description" content="A novel non-autoregressive and variable-length video generation framework that interleaves discrete frame insertions with continuous frame denoising.">
-  <meta name="twitter:image" content="https://YOUR_DOMAIN.com/static/images/social_preview.png">
-  <meta name="twitter:image:alt" content="Flowception: Temporally Expansive Flow Matching for Video Generation - Research Preview">
-
-  <!-- Academic/Research Specific -->
-  <meta name="citation_title" content="Flowception: Temporally Expansive Flow Matching for Video Generation">
-  <meta name="citation_author" content="Berrada Ifriqi, Tariq">
-  <meta name="citation_author" content="Nguyen, John">
-  <meta name="citation_author" content="Alahari, Karteek">
-  <meta name="citation_author" content="Verbeek, Jakob">
-  <meta name="citation_author" content="Chen, Ricky T. Q.">
-  <meta name="citation_publication_date" content="2024">
-  <meta name="citation_conference_title" content="CONFERENCE_NAME">
-  <meta name="citation_pdf_url" content="https://YOUR_DOMAIN.com/static/pdfs/paper.pdf">
+  <meta name="twitter:description" content="A novel non-autoregressive and variable-length video generation framework">
+  <meta name="twitter:image" content="https://flowception-meta.github.io/static/images/main_fig2.jpg">
   
-  <!-- Additional SEO -->
-  <meta name="theme-color" content="#2563eb">
-  <meta name="msapplication-TileColor" content="#2563eb">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Flowception: Temporally Expansive Flow Matching for Video Generation</title>
   
-  <!-- Preconnect for performance -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://ajax.googleapis.com">
-  <link rel="preconnect" href="https://documentcloud.adobe.com">
-  <link rel="preconnect" href="https://cdn.jsdelivr.net">
-  
-  <!-- Preload critical GIFs for faster initial display -->
-  <link rel="preload" as="image" href="static/animations/flowception_extended_and_visible.gif">
-  <link rel="preload" as="image" href="static/animations/full_sequence_flows.gif">
-  <link rel="preload" as="image" href="static/animations/autoregressive_flows.gif">
-  <link rel="preload" as="image" href="static/animations/flowception_visible_schedule.gif">
-  <link rel="preload" as="image" href="static/videos/kinetics_interp_0.gif">
-  
-  <title>Flowception: Temporally Expansive Flow Matching for Video Generation - Berrada Ifriqi et al. | Academic Research</title>
-  
-  <!-- Favicon and App Icons -->
+  <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
-  <link rel="apple-touch-icon" href="static/images/favicon.ico">
   
-  <!-- Critical CSS - Load synchronously -->
-  <link rel="stylesheet" href="static/css/bulma.min.css">
-  <link rel="stylesheet" href="static/css/index.css">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- Non-critical CSS - Load asynchronously -->
-  <link rel="preload" href="static/css/bulma-carousel.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <link rel="preload" href="static/css/bulma-slider.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <link rel="preload" href="static/css/fontawesome.all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <link rel="preload" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <!-- Bulma Carousel -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.3/dist/css/bulma-carousel.min.css">
   
-  <!-- Fallback for browsers that don't support preload -->
-  <noscript>
-    <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
-    <link rel="stylesheet" href="static/css/bulma-slider.min.css">
-    <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-  </noscript>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   
-  <!-- Fonts - Optimized loading -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Defer non-critical JavaScript -->
-  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script defer src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
-  <script defer src="static/js/fontawesome.all.min.js"></script>
-  <script defer src="static/js/bulma-carousel.min.js"></script>
-  <script defer src="static/js/bulma-slider.min.js"></script>
-  <script defer src="static/js/index.js"></script>
-  
-  <!-- Structured Data for Academic Papers -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "ScholarlyArticle",
-    "headline": "Flowception: Temporally Expansive Flow Matching for Video Generation",
-    "description": "A novel non-autoregressive and variable-length video generation framework that interleaves discrete frame insertions with continuous frame denoising.",
-    "author": [
-      {
-        "@type": "Person",
-        "name": "Tariq Berrada Ifriqi",
-        "affiliation": [
-          {
-            "@type": "Organization",
-            "name": "FAIR at Meta"
-          },
-          {
-            "@type": "Organization",
-            "name": "Univ. Grenoble Alpes, Inria, CNRS, Grenoble INP, LJK"
-          }
-        ]
-      },
-      {
-        "@type": "Person",
-        "name": "John Nguyen",
-        "affiliation": {
-          "@type": "Organization",
-          "name": "FAIR at Meta"
-        }
-      },
-      {
-        "@type": "Person",
-        "name": "Karteek Alahari",
-        "affiliation": {
-          "@type": "Organization",
-          "name": "Univ. Grenoble Alpes, Inria, CNRS, Grenoble INP, LJK"
-        }
-      },
-      {
-        "@type": "Person",
-        "name": "Jakob Verbeek",
-        "affiliation": {
-          "@type": "Organization",
-          "name": "FAIR at Meta"
-        }
-      },
-      {
-        "@type": "Person",
-        "name": "Ricky T. Q. Chen",
-        "affiliation": {
-          "@type": "Organization",
-          "name": "FAIR at Meta"
-        }
-      }
-    ],
-    "datePublished": "2024-01-01",
-    "publisher": {
-      "@type": "Organization",
-      "name": "CONFERENCE_OR_JOURNAL_NAME"
-    },
-    "url": "https://YOUR_DOMAIN.com/YOUR_PROJECT_PAGE",
-    "image": "https://YOUR_DOMAIN.com/static/images/social_preview.png",
-    "keywords": ["video generation", "flow matching", "non-autoregressive", "frame insertion", "video synthesis", "generative models", "machine learning", "computer vision"],
-    "abstract": "We present Flowception, a novel non-autoregressive and variable-length video generation framework. Flowception learns a probability path that interleaves discrete frame insertions with continuous frame denoising. Compared to autoregressive methods, Flowception alleviates error accumulation/drift as the frame insertion mechanism during sampling serves as an efficient compression mechanism to handle long-term context. Compared to full-sequence flows, our method reduces FLOPs for training three-fold, while also being more amenable to local attention variants, and allowing to learn the length of videos jointly with their content. Quantitative experimental results show improved FVD and VBench metrics over autoregressive and full-sequence baselines, which is further validated with qualitative results. Finally, by learning to insert and denoise frames in a sequence, Flowception seamlessly integrates different tasks such as image-to-video generation and video interpolation.",
-    "citation": "BIBTEX_CITATION_HERE",
-    "isAccessibleForFree": true,
-    "license": "https://creativecommons.org/licenses/by/4.0/",
-    "mainEntity": {
-      "@type": "WebPage",
-      "@id": "https://YOUR_DOMAIN.com/YOUR_PROJECT_PAGE"
-    },
-    "about": [
-      {
-        "@type": "Thing",
-        "name": "Video Generation"
-      },
-      {
-        "@type": "Thing",
-        "name": "Flow Matching"
-      }
-    ]
-  }
-  </script>
-
-  <!-- MathJax config + loader -->
+  <!-- MathJax -->
   <script>
     window.MathJax = {
       tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']]
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
       }
     };
   </script>
-  <script id="MathJax-script" async
-          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --primary-color: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary-color: #64748b;
+      --accent-color: #0ea5e9;
+      --text-dark: #1e293b;
+      --text-medium: #475569;
+      --text-light: #64748b;
+      --bg-light: #f8fafc;
+      --bg-white: #ffffff;
+      --bg-accent: #f1f5f9;
+      --border-color: #e2e8f0;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: var(--text-dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-color);
+      z-index: 1000;
+      padding: 1rem 0;
+    }
+    
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .nav-logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      text-decoration: none;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    
+    .nav-links a {
+      color: var(--text-light);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+      font-size: 0.95rem;
+    }
+    
+    .nav-links a:hover {
+      color: var(--primary-color);
+    }
+    
+    /* Hero Section */
+    .hero {
+      padding: 8rem 2rem 4rem;
+      background: var(--bg-light);
+      text-align: center;
+    }
+    
+    .hero-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 2rem;
+      color: var(--text-dark);
+    }
+    
+    .authors {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      color: var(--text-dark);
+    }
+    
+    .authors a {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+    
+    .authors a:hover {
+      text-decoration: underline;
+    }
+    
+    .affiliations {
+      font-size: 0.95rem;
+      color: var(--text-light);
+      margin-bottom: 2rem;
+    }
+    
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.375rem;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s;
+      font-size: 0.95rem;
+    }
+    
+    .btn-primary {
+      background: var(--text-dark);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    }
+    
+    .btn-disabled {
+      background: #9ca3af;
+      color: white;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    
+    .btn-disabled:hover {
+      transform: none;
+      box-shadow: none;
+    }
+    
+    /* Teaser Figure */
+    .teaser {
+      padding: 4rem 2rem;
+      background: white;
+    }
+    
+    .teaser-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .teaser img {
+      width: 100%;
+      border-radius: 0.5rem;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-color);
+    }
+    
+    .caption {
+      margin-top: 1.5rem;
+      font-size: 0.95rem;
+      color: var(--text-light);
+      text-align: center;
+      line-height: 1.6;
+    }
+    
+    .caption strong {
+      color: var(--text-dark);
+    }
+    
+    /* Section Styling */
+    section {
+      padding: 5rem 2rem;
+    }
+    
+    .section-light {
+      background: var(--bg-light);
+    }
+    
+    .section-white {
+      background: white;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .wide-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 3rem;
+      color: var(--text-dark);
+      position: relative;
+      padding-bottom: 1rem;
+    }
+    
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: var(--text-medium);
+      border-radius: 2px;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--text-dark);
+    }
+    
+    /* Abstract */
+    .abstract-content {
+      max-width: 900px;
+      margin: 3rem auto 0;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      text-align: justify;
+      color: var(--text-dark);
+    }
+    
+    .abstract-content strong {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+    
+    /* Method Section - Grid Layout */
+    .method-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-top: 3rem;
+      align-items: start;
+    }
+    
+    .method-item {
+      background: white;
+      padding: 2rem;
+      border-radius: 0.5rem;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+    }
+    
+    .method-item img {
+      width: 100%;
+      border-radius: 0.25rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border-color);
+    }
+    
+    .method-description {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--text-light);
+    }
+    
+    /* Comparison Section */
+    .comparison-section {
+      margin-top: 4rem;
+      background: white;
+      padding: 3rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .comparison-header {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 2rem;
+      align-items: center;
+      margin-bottom: 3rem;
+    }
+    
+    .comparison-header img {
+      width: 100%;
+      border-radius: 0.25rem;
+      border: 1px solid var(--border-color);
+    }
+    
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .comparison-item {
+      text-align: center;
+    }
+    
+    .comparison-item img {
+      width: 100%;
+      border-radius: 0.25rem;
+      margin-bottom: 1rem;
+      border: 1px solid var(--border-color);
+    }
+    
+    .comparison-item figcaption {
+      font-weight: 600;
+      color: var(--text-dark);
+      font-size: 0.95rem;
+    }
+    
+    /* Capabilities Section */
+    .capabilities-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-top: 3rem;
+    }
+    
+    .capability-card {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .capability-card h3 {
+      margin-bottom: 1.5rem;
+      color: var(--text-dark);
+    }
+    
+    .capability-card img {
+      width: 100%;
+      border-radius: 0.25rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border-color);
+    }
+    
+    .capability-card p {
+      line-height: 1.7;
+      color: var(--text-light);
+    }
+    
+    /* Results Carousel */
+    .results-carousel {
+      overflow: hidden;
+      margin: 0 auto;
+      max-width: 1400px;
+    }
+    
+    .results-carousel .item {
+      padding: 1.5rem;
+      background: var(--bg-white);
+      border-radius: 0.5rem;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      margin: 0 0.5rem;
+    }
+    
+    .results-carousel .item img {
+      width: 100%;
+      height: auto;
+      border-radius: 0.25rem;
+      border: 1px solid var(--border-color);
+      display: block;
+    }
+    
+    /* Carousel Navigation */
+    .carousel .slider-navigation-previous,
+    .carousel .slider-navigation-next {
+      background: var(--text-dark);
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 0.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    
+    .carousel .slider-navigation-previous:hover,
+    .carousel .slider-navigation-next:hover {
+      background: var(--primary-color);
+    }
+    
+    /* Carousel Pagination */
+    .carousel .slider-pagination .slider-page {
+      background: var(--border-color);
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      transition: background 0.2s;
+    }
+    
+    .carousel .slider-pagination .slider-page.is-active {
+      background: var(--primary-color);
+    }
+    
+    /* Citation Section */
+    .citation-container {
+      max-width: 900px;
+      margin: 3rem auto 0;
+    }
+    
+    .bibtex-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .copy-btn {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 0.375rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background 0.2s;
+      font-size: 0.9rem;
+    }
+    
+    .copy-btn:hover {
+      background: var(--primary-dark);
+    }
+    
+    .copy-btn.copied {
+      background: #10b981;
+    }
+    
+    pre {
+      background: var(--bg-accent);
+      border: 1px solid var(--border-color);
+      padding: 1.5rem;
+      border-radius: 0.375rem;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+    
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Cascadia Code', 'Courier New', monospace;
+      color: var(--text-dark);
+    }
+    
+    .acknowledgments {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: var(--bg-accent);
+      border-left: 3px solid var(--text-light);
+      border-radius: 0.25rem;
+      font-size: 0.9rem;
+      color: var(--text-medium);
+      line-height: 1.6;
+    }
+    
+    /* Footer */
+    footer {
+      background: var(--text-dark);
+      color: white;
+      text-align: center;
+      padding: 2rem;
+    }
+    
+    footer a {
+      color: var(--accent-color);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    footer a:hover {
+      color: #38bdf8;
+      text-decoration: underline;
+    }
+    
+    /* Scroll to Top */
+    .scroll-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 48px;
+      height: 48px;
+      background: var(--text-dark);
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s, background 0.2s;
+      box-shadow: var(--shadow-md);
+      z-index: 999;
+    }
+    
+    .scroll-top.visible {
+      opacity: 1;
+    }
+    
+    .scroll-top:hover {
+      background: var(--primary-color);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .method-grid,
+      .capabilities-grid,
+      .comparison-header {
+        grid-template-columns: 1fr;
+      }
+      
+      .comparison-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+      
+      h2 {
+        font-size: 1.75rem;
+      }
+      
+      .hero {
+        padding: 6rem 1.5rem 3rem;
+      }
+      
+      section {
+        padding: 3rem 1.5rem;
+      }
+      
+      .nav-links {
+        gap: 1rem;
+        font-size: 0.85rem;
+      }
+    }
+  </style>
 </head>
 <body>
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-container">
+      <a href="#" class="nav-logo">Flowception</a>
+      <ul class="nav-links">
+        <li><a href="#abstract">Abstract</a></li>
+        <li><a href="#method">Method</a></li>
+        <li><a href="#capabilities">Capabilities</a></li>
+        <li><a href="#examples">Examples</a></li>
+        <li><a href="#citation">Citation</a></li>
+      </ul>
+    </div>
+  </nav>
 
-
-  <!-- Scroll to Top Button -->
-  <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
-    <i class="fas fa-chevron-up"></i>
-  </button>
-
-
-  <main id="main-content">
+  <!-- Hero Section -->
   <section class="hero">
-    <div class="hero-body">
-      <div class="container is-max-desktop">
-        <div class="columns is-centered">
-          <div class="column has-text-centered">
-            <h1 class="title is-1 publication-title">Flowception: Temporally Expansive Flow Matching for Video Generation</h1>
-            <div class="is-size-5 publication-authors">
-              <span class="author-block">
-                <a href="https://tariqberrada.github.io/" target="_blank">Tariq Berrada Ifriqi</a><sup>1,2</sup>,</span>
-                <span class="author-block">
-                  <a href="https://johnlnguyen.com/" target="_blank">John Nguyen</a><sup>1</sup>,</span>
-                  <span class="author-block">
-                    <a href="https://lear.inrialpes.fr/people/alahari/" target="_blank">Karteek Alahari</a><sup>2</sup>,</span>
-                  <span class="author-block">
-                    <a href="#" target="_blank">Jakob Verbeek</a><sup>1</sup>,</span>
-                  <span class="author-block">
-                    <a href="https://rtqichen.github.io/" target="_blank">Ricky T. Q. Chen</a><sup>1</sup>
-                  </span>
-                  </div>
+    <div class="hero-container">
+      <h1>Flowception: Temporally Expansive Flow Matching for Video Generation</h1>
+      
+      <div class="authors">
+        <a href="https://tariqberrada.github.io/" target="_blank" rel="noopener">Tariq Berrada Ifriqi</a><sup>1,2</sup>,
+        <a href="https://johnlnguyen.com/" target="_blank" rel="noopener">John Nguyen</a><sup>1</sup>,
+        <a href="https://lear.inrialpes.fr/people/alahari/" target="_blank" rel="noopener">Karteek Alahari</a><sup>2</sup>,
+        Jakob Verbeek<sup>1</sup>,
+        <a href="https://rtqichen.github.io/" target="_blank" rel="noopener">Ricky T. Q. Chen</a><sup>1</sup>
+      </div>
+      
+      <div class="affiliations">
+        <sup>1</sup>FAIR at Meta, <sup>2</sup>Univ. Grenoble Alpes, Inria, CNRS, Grenoble INP, LJK
+      </div>
+      
+      <div class="hero-buttons">
+        <a href="https://arxiv.org/abs/2512.11438" target="_blank" rel="noopener" class="btn btn-primary">
+          <i class="fas fa-file-pdf"></i>
+          <span>Paper</span>
+        </a>
+        <a href="https://arxiv.org/abs/2512.11438" target="_blank" rel="noopener" class="btn btn-primary">
+          <i class="ai ai-arxiv"></i>
+          <span>arXiv</span>
+        </a>
+        <span class="btn btn-disabled" title="Coming soon">
+          <i class="fab fa-github"></i>
+          <span>Code (Coming Soon)</span>
+        </span>
+      </div>
+    </div>
+  </section>
 
-                  <div class="is-size-5 publication-authors">
-                    <span class="author-block"><sup>1</sup>FAIR at Meta, <sup>2</sup>Univ. Grenoble Alpes, Inria, CNRS, Grenoble INP, LJK, France</span>
-                  </div>
+  <!-- Teaser Figure -->
+  <section class="teaser">
+    <div class="teaser-container">
+      <img src="static/images/main_fig2.jpg" alt="Flowception method overview" loading="eager">
+      <p class="caption">
+        <strong>Figure 1:</strong> Flowception seamlessly integrates frame insertion and denoising for efficient, high-quality video generation with reduced error accumulation compared to autoregressive methods.
+      </p>
+    </div>
+  </section>
 
-                  <div class="column has-text-centered">
-                    <div class="publication-links">
-                         <!-- TODO: Update with your arXiv paper ID -->
-                      <span class="link-block">
-                        <a href="https://arxiv.org/abs/2512.11438" target="_blank"
-                        class="external-link button is-normal is-rounded is-dark">
-                        <span class="icon">
-                          <i class="fas fa-file-pdf"></i>
-                        </span>
-                        <span>Paper</span>
-                      </a>
-                    </span>
+  <!-- Abstract -->
+  <section id="abstract" class="section-light">
+    <div class="container">
+      <h2>Abstract</h2>
+      <div class="abstract-content">
+        <p>
+          We present <strong>Flowception</strong>, a novel non-autoregressive and variable-length video generation framework. Flowception learns a probability path that interleaves discrete frame insertions with continuous frame denoising. Compared to autoregressive methods, Flowception alleviates error accumulation/drift as the frame insertion mechanism during sampling serves as an efficient compression mechanism to handle long-term context. Compared to full-sequence flows, our method reduces FLOPs for training three-fold, while also being more amenable to local attention variants, and allowing to learn the length of videos jointly with their content. Quantitative experimental results show improved FVD and VBench metrics over autoregressive and full-sequence baselines, which is further validated with qualitative results. Finally, by learning to insert and denoise frames in a sequence, Flowception seamlessly integrates different tasks such as image-to-video generation and video interpolation.
+        </p>
+      </div>
+    </div>
+  </section>
 
-                  <!-- TODO: Replace with your GitHub repository URL -->
-<!--                  <span class="link-block">
-                    <a href="https://github.com/YOUR REPO HERE" target="_blank"
-                    class="external-link button is-normal is-rounded is-dark">
-                    <span class="icon">
-                      <i class="fab fa-github"></i>
-                    </span>
-                    <span>Code</span>
-                  </a>
-                </span>
--->
-		    
-                <!-- TODO: Update with your arXiv paper ID -->
-                <span class="link-block">
-                  <a href="https://arxiv.org/abs/2512.11438" target="_blank"
-                  class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                    <i class="ai ai-arxiv"></i>
-                  </span>
-                  <span>arXiv</span>
-                </a>
-              </span>
-            </div>
+  <!-- Method Overview -->
+  <section id="method" class="section-white">
+    <div class="container">
+      <h2>Method Overview</h2>
+      
+      <div class="method-grid">
+        <div class="method-item">
+          <img src="static/images/flowception_schedule.jpg" alt="Extended time scheduler" loading="lazy">
+          <p class="caption">
+            <strong>Figure 2:</strong> Illustration of the extended time scheduler for Flowception training. In Flowception, each frame has its own denoising time which depends on its insertion time. The global extended time $\tau_g$ progresses from 0 to 2, where insertion of new frames only occurs when $\tau_g < 1$. Starting frames (in blue) are instantiated at $\tau_g = 0$, while other frames (in orange) are inserted later and thus have a delay.
+          </p>
+        </div>
+        
+        <div class="method-item">
+          <img src="static/animations/flowception_sampling.gif" alt="Flowception sampling" loading="lazy">
+          <p class="caption">
+            <strong>Figure 3:</strong> Flowception sampling starts from a small number of frames. Each step interleaves velocity updates (denoising) and predicted frame insertions. We illustrate the noise level of each frame by the lightness of its color.
+          </p>
+        </div>
+      </div>
+      
+      <!-- Comparison with Baselines -->
+      <div class="comparison-section">
+        <h3 style="text-align: center; margin-bottom: 2rem;">Comparison with Baseline Methods</h3>
+        
+        <div class="comparison-header">
+          <img src="static/animations/flowception_extended_and_visible.gif" alt="Flowception scheduling">
+          <div class="method-description">
+            <p>
+              Starting from a small set of frames, Flowception learns to flow existing frames while potentially inserting new frames anywhere in the sequence. Since the latest insertion happens at \( \tau_g = 1 \), the maximum number of steps is capped to \( \frac{2}{h} \) where \( h \) is the sampling step size.
+            </p>
+            <p style="margin-top: 1rem;">
+              During training, frames are deleted with uniform probability in \([-1,0]\), and each existing frame predicts the missing number of frames in the gap with its successor. The missing number of frames is directly related to the insertion rate, hence the probability of insertion during each step in the sampling process.
+            </p>
+          </div>
+        </div>
+        
+        <div class="comparison-grid">
+          <div class="comparison-item">
+            <img src="static/animations/full_sequence_flows.gif" alt="Full sequence flows">
+            <figcaption>Full Sequence Flows</figcaption>
+          </div>
+          <div class="comparison-item">
+            <img src="static/animations/autoregressive_flows.gif" alt="Autoregressive flows">
+            <figcaption>Autoregressive Flows</figcaption>
+          </div>
+          <div class="comparison-item">
+            <img src="static/animations/flowception_visible_schedule.gif" alt="Flowception">
+            <figcaption>Flowception (Ours)</figcaption>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-
-<!-- Teaser video-->
-<section class="hero teaser">
-  <div class="container is-max-desktop">
-    <div class="hero-body">
-      <img src="static/images/main_fig2.jpg" alt="Flowception method overview" loading="eager"/>
-      <h2 class="subtitle has-text-centered">
-        Flowception seamlessly integrates frame insertion and denoising for efficient, high-quality video generation with reduced error accumulation compared to autoregressive methods.
-      </h2>
-    </div>
-  </div>
-</section>
-<!-- End teaser video -->
-
-<!-- Paper abstract -->
-<section class="section hero is-light">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Abstract</h2>
-        <div class="content has-text-justified">
+  <!-- Capabilities -->
+  <section id="capabilities" class="section-light">
+    <div class="container">
+      <h2>Capabilities</h2>
+      
+      <div class="capabilities-grid">
+        <div class="capability-card">
+          <h3>Multi-Modal Unification</h3>
+          <img src="static/images/flowception_capabilities.png" alt="Multi-modal capabilities">
           <p>
-            We present Flowception, a novel non-autoregressive and variable-length video generation framework. Flowception learns a probability path that interleaves discrete frame insertions with continuous frame denoising. Compared to autoregressive methods, Flowception alleviates error accumulation/drift as the frame insertion mechanism during sampling serves as an efficient compression mechanism to handle long-term context. Compared to full-sequence flows, our method reduces FLOPs for training three-fold, while also being more amenable to local attention variants, and allowing to learn the length of videos jointly with their content. Quantitative experimental results show improved FVD and VBench metrics over autoregressive and full-sequence baselines, which is further validated with qualitative results. Finally, by learning to insert and denoise frames in a sequence, Flowception seamlessly integrates different tasks such as image-to-video generation and video interpolation.
+            Flowception seamlessly unifies multiple modalities by introducing <em>context frames</em> (i.e., clean frames that are part of the visible sequence, which can potentially induce insertions). By providing a set of context frames, the model is able to learn how many new frames to insert in order to generate a coherent video.
+          </p>
+        </div>
+        
+        <div class="capability-card">
+          <h3>Variable-Length Generation</h3>
+          <img src="static/images/toy_length.png" alt="Variable-length generation">
+          <p>
+            Flowception is able to learn a valid distribution over video lengths. The model can be trained with a mix of short and long videos and generalize during sampling such that the video length is induced from its content. We verify this in a toy example where training videos only have lengths 15, 20, 25, or 30 frames, then plot the histogram of both ground truth and generated video lengths.
           </p>
         </div>
       </div>
     </div>
-  </div>
-</section>
-<!-- End paper abstract -->
+  </section>
 
-
-<!-- Method Overview -->
-<section class="hero is-small is-light">
-  <div class="hero-body">
-    <div class="container is-max-desktop">
-      <h2 class="title is-3 has-text-centered">Method Overview</h2>
-      <div class="publication-banner">
-        <figure class="image" style="max-width: 500px; margin: 0 auto;">
-          <img src="static/images/flowception_schedule.jpg" alt="Flowception extended time scheduler illustration" loading="lazy"/>
-        </figure>
-      </div>
-      <h2 class="subtitle has-text-centered" style="margin-top: 1.5rem;">
-        Illustration of the extended time scheduler for Flowception training. In Flowception, each frame has its own denoising time which depends on its insertion time. The global extended time $\tau_g$ progresses from $0$ to $2$, where insertion of new frames only occur when $\tau_g < 1$. Starting frames (in blue) are instantiated at $\tau_g = 0$, other frames (in orange) are inserted later (when $τg > 0$) and thus have a delay. With a linear scheduler, the insertion delays follow a uniform distribution.
-      </h2>
-      <div class="publication-banner">
-        <figure class="image" style="max-width: 500px; margin: 0 auto;">
-          <img src="static/animations/flowception_sampling.gif" alt="Flowception extended time scheduler illustration" loading="lazy"/>
-        </figure>
-      </div>
-      <h2 class="subtitle has-text-centered" style="margin-top: 1.5rem;">
-        Flowception sampling starts from a small number of frames, each step interleaves velocity updates (denoising) and predicted frame insertions we illsutrate the noise level of each frame by the lightness of its color.
-      </h2>
-    </div>
-  </div>
-</section>
-<!-- End Method Overview -->
-
-<!-- schedule comparison -->
-<section class="hero is-small is-light">
-  <div class="hero-body">
-    <div class="container is-max-desktop">
-      <h2 class="title is-3 has-text-centered">Comparing methodologies</h2>
-
-      <div class="columns is-vcentered is-variable is-6">
-      <!-- Figure column -->
-      <div class="column is-narrow">
-        <div class="publication-banner">
-          <figure class="image" style="max-width: 300px; margin: 0 auto;">
-            <img src="static/animations/flowception_extended_and_visible.gif"
-                alt="Flowception extended time scheduler illustration"
-                loading="eager"
-                fetchpriority="high">
-          </figure>
-        </div>
-      </div>
-
-      <!-- Text column -->
-      <div class="column">
-        <h2 class="subtitle" style="margin-top: 0;">
-          Starting from a small set of frames, Flowception learns to flow existing frames while
-          potentially inserting new frames anywhere in the sequence.<br>
-          Since the latest insertions happens at \( \tau_g = 1 \), the maximum number of steps
-          is capped to \( \frac{2}{h} \) where \( h \) is the sampling step size.<br>
-          During training, frames are deleted with uniform probability in $[-1,0]$, and each existing frame predicts the missing number of frames in the gap with its sucessor.<br>
-          The missing number of frames is directly related to the insertion rate, hence the probability of insertion during each step in the sampling process.
-        </h2>
-      </div>
-    </div>
-
-
-
-      <div class="columns is-vcentered is-centered">
-        <div class="column is-one-third publication-banner">
-          <img src="static/animations/full_sequence_flows.gif"
-               alt="Full sequence flows"
-               loading="eager"
-               fetchpriority="high">
-        </div>
-
-        <div class="column is-one-third publication-banner">
-          <img src="static/animations/autoregressive_flows.gif"
-               alt="Autoregressive flows"
-               loading="eager"
-               fetchpriority="high">
-        </div>
-
-        <div class="column is-one-third publication-banner">
-          <img src="static/animations/flowception_visible_schedule.gif"
-               alt="Flowception visible schedule"
-               loading="eager"
-               fetchpriority="high">
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-<!-- End schedule comparison -->
-
-
-<!-- capabilities -->
-<section class="hero is-small is-light">
-  <div class="hero-body">
-    <div class="container is-max-desktop">
-      <h2 class="title is-3 has-text-centered">Capabilities</h2>
-
-      <div class="columns is-vcentered is-variable is-6">
-      <!-- Figure column -->
-      <div class="column is-narrow">
-        <div class="publication-banner">
-          <figure class="image" style="max-width: 400px; margin: 0 auto;">
-            <img src="static/images/flowception_capabilities.png"
-                alt="Flowception capabilities"
-                loading="lazy">
-          </figure>
-        </div>
-      </div>
-
-      <!-- Text column -->
-      <div class="column">
-        <h2 class="subtitle" style="margin-top: 0;">
-          Flowception seamlessly unifies multiple modalities by introducing context frames (i.e clean frames that are part of the visible sequence, which can potentially induce insertions).<br>
-          By providing a set of context frames, the model is able to learn how many new frames to insert in order to generate a coherent video.
-        </h2>
-      </div>
-    </div>
-    
-
-    <div class="columns is-vcentered is-variable is-6">
-      <!-- Figure column -->
-      <div class="column is-narrow">
-        <div class="publication-banner">
-          <figure class="image" style="max-width: 400px; margin: 0 auto;">
-            <img src="static/images/toy_length.png"
-                alt="Flowception capabilities"
-                loading="lazy">
-          </figure>
-        </div>
-      </div>
-
-      <!-- Text column -->
-      <div class="column">
-        <h2 class="subtitle" style="margin-top: 0;">
-          Flowception is also able to learn a valid distribution over video lengths, hence the model can be trained with a mix of short and long videos and generalize during sampling such that the video length is induced from its content.
-      We veify this in a toy example where trainng videos only have lengths 15, 20, 25 or 30 then plot the histogram of both ground truth and generated video lengths.
-        </h2>
-      </div>
-  </div>
-</section>
-
-
-
-<!-- Video carousel -->
-<section class="hero is-small">
-  <div class="hero-body">
+  <!-- Qualitative Results -->
+  <section id="examples" class="section-white">
     <div class="container">
-      <h2 class="title is-3 has-text-centered">Examples</h2>
-      <div id="examples-carousel" class="carousel results-carousel">
+      <h2>Qualitative Results</h2>
+      <p style="text-align: center; color: var(--text-light); margin-top: 1rem; margin-bottom: 3rem;">
+        Examples of video interpolation and image-to-video generation across different datasets.
+      </p>
+      
+      <div id="results-carousel" class="carousel results-carousel">
         <div class="item item-video1">
-          <img src="static/videos/kinetics_interp_0.gif" alt="Kinetics interpolation result 1" loading="eager" fetchpriority="high">
+          <img src="static/videos/kinetics_interp_0.gif" alt="Kinetics interpolation 1" loading="lazy">
         </div>
         <div class="item item-video2">
-          <img src="static/videos/kinetics_interp_1.gif" alt="Kinetics interpolation result 2" loading="eager">
+          <img src="static/videos/kinetics_interp_1.gif" alt="Kinetics interpolation 2" loading="lazy">
         </div>
         <div class="item item-video3">
-          <img src="static/videos/kinetics_interp_2.gif" alt="Kinetics interpolation result 3" loading="eager">
+          <img src="static/videos/kinetics_interp_2.gif" alt="Kinetics interpolation 3" loading="lazy">
         </div>
         <div class="item item-video4">
-          <img src="static/videos/kinetics_interp_3.gif" alt="Kinetics interpolation result 4" loading="eager">
+          <img src="static/videos/kinetics_interp_3.gif" alt="Kinetics interpolation 4" loading="lazy">
         </div>
         <div class="item item-video5">
-          <img src="static/videos/kinetics_interp_4.gif" alt="Kinetics interpolation result 5" loading="eager">
+          <img src="static/videos/kinetics_interp_4.gif" alt="Kinetics interpolation 5" loading="lazy">
         </div>
         <div class="item item-video6">
-          <img src="static/videos/re10k_interp_0.gif" alt="RE10K interpolation result 1" loading="eager">
+          <img src="static/videos/re10k_interp_0.gif" alt="RE10K interpolation 1" loading="lazy">
         </div>
         <div class="item item-video7">
-          <img src="static/videos/re10k_interp_1.gif" alt="RE10K interpolation result 2" loading="eager">
+          <img src="static/videos/re10k_interp_1.gif" alt="RE10K interpolation 2" loading="lazy">
         </div>
         <div class="item item-video8">
-          <img src="static/videos/re10k_interp_2.gif" alt="RE10K interpolation result 3" loading="eager">
+          <img src="static/videos/re10k_interp_2.gif" alt="RE10K interpolation 3" loading="lazy">
         </div>
         <div class="item item-video9">
-          <img src="static/videos/re10k_interp_3.gif" alt="RE10K interpolation result 4" loading="eager">
+          <img src="static/videos/re10k_interp_3.gif" alt="RE10K interpolation 4" loading="lazy">
         </div>
         <div class="item item-video10">
-          <img src="static/videos/re10k_interp_4.gif" alt="RE10K interpolation result 5" loading="eager">
+          <img src="static/videos/re10k_interp_4.gif" alt="RE10K interpolation 5" loading="lazy">
         </div>
         <div class="item item-video11">
-          <img src="static/videos/taichi_i2v_0.gif" alt="Taichi image-to-video result 1" loading="eager">
+          <img src="static/videos/taichi_i2v_0.gif" alt="Taichi i2v 1" loading="lazy">
         </div>
         <div class="item item-video12">
-          <img src="static/videos/taichi_i2v_1.gif" alt="Taichi image-to-video result 2" loading="eager">
+          <img src="static/videos/taichi_i2v_1.gif" alt="Taichi i2v 2" loading="lazy">
         </div>
         <div class="item item-video13">
-          <img src="static/videos/taichi_i2v_2.gif" alt="Taichi image-to-video result 3" loading="eager">
+          <img src="static/videos/taichi_i2v_2.gif" alt="Taichi i2v 3" loading="lazy">
         </div>
         <div class="item item-video14">
-          <img src="static/videos/taichi_i2v_3.gif" alt="Taichi image-to-video result 4" loading="eager">
+          <img src="static/videos/taichi_i2v_3.gif" alt="Taichi i2v 4" loading="lazy">
         </div>
         <div class="item item-video15">
-          <img src="static/videos/taichi_i2v_4.gif" alt="Taichi image-to-video result 5" loading="eager">
+          <img src="static/videos/taichi_i2v_4.gif" alt="Taichi i2v 5" loading="lazy">
         </div>
       </div>
     </div>
-  </div>
-</section>
-<!-- End video carousel -->
+  </section>
 
-
-
-
-<!--BibTex citation -->
-<section class="section" id="BibTeX">
-  <div class="container is-max-desktop content">
-
-    <!-- Acknowledgments paragraph (before BibTeX) -->
-    <p class="has-text-grey" style="margin-bottom: 1.25rem;">
-      <strong>Acknowledgments.</strong>
-      Karteek Alahari was supported in part by the Institute of Information &amp; Communications Technology Planning
-      &amp; Evaluation (IITP) grant funded by the Korean Government (MSIT)
-      (No. RS-2024-00457882, National AI Research Lab Project).
-    </p>
-
-    <div class="bibtex-header">
-      <h2 class="title">BibTeX</h2>
-      <button class="copy-bibtex-btn" onclick="copyBibTeX()" title="Copy BibTeX to clipboard">
-        <i class="fas fa-copy"></i>
-        <span class="copy-text">Copy</span>
-      </button>
-    </div>
-    <pre id="bibtex-code"><code>@misc{ifriqi2025flowceptiontemporallyexpansiveflow,
-      title={Flowception: Temporally Expansive Flow Matching for Video Generation}, 
-      author={Tariq Berrada Ifriqi and John Nguyen and Karteek Alahari and Jakob Verbeek and Ricky T. Q. Chen},
-      year={2025},
-      eprint={2512.11438},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2512.11438}, 
+  <!-- Citation -->
+  <section id="citation" class="section-light">
+    <div class="citation-container">
+      <h2>Citation</h2>
+      
+      <div style="margin-top: 3rem;">
+        <div class="bibtex-header">
+          <h3>BibTeX</h3>
+          <button class="copy-btn" onclick="copyBibTeX()">
+            <i class="fas fa-copy"></i>
+            <span class="copy-text">Copy</span>
+          </button>
+        </div>
+        
+        <pre id="bibtex-code"><code>@misc{ifriqi2025flowceptiontemporallyexpansiveflow,
+  title={Flowception: Temporally Expansive Flow Matching for Video Generation}, 
+  author={Tariq Berrada Ifriqi and John Nguyen and Karteek Alahari and Jakob Verbeek and Ricky T. Q. Chen},
+  year={2025},
+  eprint={2512.11438},
+  archivePrefix={arXiv},
+  primaryClass={cs.CV},
+  url={https://arxiv.org/abs/2512.11438}
 }</code></pre>
+        
+        <div class="acknowledgments">
+          <strong>Acknowledgments.</strong>
+          Karteek Alahari was supported in part by the Institute of Information &amp; Communications Technology Planning &amp; Evaluation (IITP) grant funded by the Korean Government (MSIT) (No. RS-2024-00457882, National AI Research Lab Project).
+        </div>
+      </div>
     </div>
-</section>
-<!--End BibTex citation -->
+  </section>
 
-<!-- Statcounter tracking code -->
+  <!-- Footer -->
+  <footer>
+    <p>
+      © 2025 FAIR at Meta & Inria. Licensed under a 
+      <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">
+        Creative Commons Attribution 4.0 International License
+      </a>.
+    </p>
+  </footer>
+
+  <!-- Scroll to Top Button -->
+  <button class="scroll-top" onclick="scrollToTop()">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <script>
+    // Scroll to top functionality
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Show/hide scroll button
+    window.addEventListener('scroll', function() {
+      const scrollButton = document.querySelector('.scroll-top');
+      if (window.pageYOffset > 300) {
+        scrollButton.classList.add('visible');
+      } else {
+        scrollButton.classList.remove('visible');
+      }
+    });
+
+    // Copy BibTeX
+    function copyBibTeX() {
+      const bibtexCode = document.getElementById('bibtex-code').textContent;
+      const button = document.querySelector('.copy-btn');
+      const copyText = button.querySelector('.copy-text');
+      
+      navigator.clipboard.writeText(bibtexCode).then(function() {
+        copyText.textContent = 'Copied!';
+        button.classList.add('copied');
+        
+        setTimeout(function() {
+          copyText.textContent = 'Copy';
+          button.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // Smooth scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
   
-<!-- You can add a tracker to track page visits by creating an account at statcounter.com -->
-
-    <!-- End of Statcounter Code -->
-
-  </body>
-  </html>
+  <!-- Bulma Carousel JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.3/dist/js/bulma-carousel.min.js"></script>
+  <script>
+    // Initialize carousel when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      bulmaCarousel.attach('#results-carousel', {
+        slidesToScroll: 1,
+        slidesToShow: 3,
+        infinite: true,
+        autoplay: true,
+        autoplaySpeed: 3000,
+        pauseOnHover: true,
+        navigation: true,
+        navigationKeys: true,
+        pagination: true
+      });
+    });
+  </script>
+</body>
+</html>
