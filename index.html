@@ -700,7 +700,403 @@
       
       <div class="method-grid">
         <div class="method-item">
-          <img src="static/images/flowception_schedule.jpg" alt="Extended time scheduler" loading="lazy">
+          <!-- Flowception Schedule Interactive Widget -->
+<!-- Replaces flowception_schedule.jpg in the method-grid -->
+<div class="fc-schedule" id="fc-schedule">
+  <div class="fcs-header">
+    <span class="fcs-title">Extended-time scheduler</span>
+    <span class="fcs-tau" id="fcsTauBadge">&tau;<sub>g</sub>&thinsp;=&thinsp;0.00</span>
+  </div>
+
+  <svg id="fcsChart" class="fcs-svg" viewBox="0 0 520 360"></svg>
+
+  <div class="fcs-controls">
+    <div class="fcs-slider-row">
+      <input type="range" class="fc-range fcs-range" id="fcsSlider" min="0" max="200" value="0" step="1" />
+      <button class="fc-play fcs-play" id="fcsPlayBtn" title="Play / Pause">
+        <svg id="fcsPlayIcon" viewBox="0 0 24 24" width="12" height="12"><polygon points="7,3 21,12 7,21" fill="currentColor"/></svg>
+        <svg id="fcsPauseIcon" viewBox="0 0 24 24" width="12" height="12" style="display:none">
+          <rect x="5" y="3" width="4" height="18" fill="currentColor"/>
+          <rect x="15" y="3" width="4" height="18" fill="currentColor"/>
+        </svg>
+      </button>
+    </div>
+    <div class="fcs-range-labels">
+      <span>&tau;<sub>g</sub> = 0</span>
+      <span>2</span>
+    </div>
+  </div>
+
+  <div class="fcs-legend">
+    <div class="fcs-legend-item"><span class="fcs-swatch" style="background:#3b82f6"></span>Start frames</div>
+    <div class="fcs-legend-item"><span class="fcs-swatch" style="background:#e8943a"></span>Inserted frames</div>
+    <div class="fcs-legend-item fcs-legend-zone"><span class="fcs-zone-swatch" style="background:#fef3c7;border-color:#fde68a"></span>Deleted</div>
+    <div class="fcs-legend-item fcs-legend-zone"><span class="fcs-zone-swatch" style="background:#dcfce7;border-color:#bbf7d0"></span>Flow</div>
+    <div class="fcs-legend-item fcs-legend-zone"><span class="fcs-zone-swatch" style="background:#dbeafe;border-color:#bfdbfe"></span>Terminal</div>
+  </div>
+</div>
+
+<style>
+/* ---- Flowception Schedule Widget ---- */
+.fc-schedule {
+  background: var(--background-primary, #fff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: var(--border-radius, 12px);
+  padding: 1.5rem 1.5rem 1rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  width: 100%;
+}
+
+.fcs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.75rem;
+}
+
+.fcs-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-light, #94a3b8);
+}
+
+.fcs-tau {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--primary-color, #2563eb);
+  background: rgba(37, 99, 235, 0.07);
+  padding: 0.2em 0.55em;
+  border-radius: 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+.fcs-svg {
+  width: 100%;
+  display: block;
+}
+
+.fcs-controls {
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border-color, #e2e8f0);
+}
+
+.fcs-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.fcs-range-labels {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.2rem 0 0;
+  margin-right: calc(30px + 0.6rem);
+}
+
+.fcs-range-labels span {
+  font-size: 0.55rem;
+  color: var(--text-light, #94a3b8);
+}
+
+.fcs-legend {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border-color, #e2e8f0);
+}
+
+.fcs-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.55rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary, #64748b);
+}
+
+.fcs-swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.fcs-zone-swatch {
+  width: 14px;
+  height: 8px;
+  border-radius: 2px;
+  display: inline-block;
+  border: 1px solid;
+}
+</style>
+
+<script>
+(function() {
+  const FRAMES = [{"index": 0, "u": 0.0, "is_start": true}, {"index": 1, "u": 0.8702, "is_start": false}, {"index": 2, "u": 0.2868, "is_start": false}, {"index": 3, "u": 0.6031, "is_start": false}, {"index": 4, "u": 0.7775, "is_start": false}, {"index": 5, "u": 0.0, "is_start": true}];
+  const TOTAL = 6;
+
+  const CH = { l:65, r:80, t:20, b:20, w:520, h:360 };
+
+  const TAU_MIN = -1.1;
+  const TAU_MAX = 2.1;
+
+  const BLUE = '#3b82f6';
+  const BLUE_LIGHT = '#93c5fd';
+  const ORANGE = '#e8943a';
+  const ORANGE_LIGHT = '#fcd29f';
+
+  function el(tag, attrs={}) {
+    const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (const [k,v] of Object.entries(attrs)) e.setAttribute(k, v);
+    return e;
+  }
+
+  function yS(tau) {
+    const {l,r,t,b,w,h} = CH;
+    const pH = h - t - b;
+    return t + pH * (1 - (tau - TAU_MIN) / (TAU_MAX - TAU_MIN));
+  }
+
+  function xS(idx) {
+    const {l,r,w} = CH;
+    const pW = w - l - r;
+    return l + pW * (idx + 0.5) / TOTAL;
+  }
+
+  function draw(svg, tau_g) {
+    svg.innerHTML = '';
+    const {l,r,t,b,w,h} = CH;
+
+    // Defs
+    const defs = el('defs');
+    // Arrow markers
+    for (const [id, color] of [['arrBlue', BLUE], ['arrOrange', ORANGE]]) {
+      const marker = el('marker', {id, viewBox:'0 0 10 10', refX:'5', refY:'5', markerWidth:'4', markerHeight:'4', orient:'auto-start-reverse'});
+      const path = el('path', {d:'M 0 0 L 10 5 L 0 10 z', fill:color});
+      marker.appendChild(path);
+      defs.appendChild(marker);
+    }
+    svg.appendChild(defs);
+
+    // Zone backgrounds
+    // Deleted zone: tau -1.1 to 0
+    svg.appendChild(el('rect', {
+      x: l, y: yS(0), width: w-l-r, height: yS(TAU_MIN) - yS(0),
+      fill: '#fef9ee', rx: 0
+    }));
+    // Flow zone: tau 0 to 1
+    svg.appendChild(el('rect', {
+      x: l, y: yS(1), width: w-l-r, height: yS(0) - yS(1),
+      fill: '#f0fdf4', rx: 0
+    }));
+    // Terminal zone: tau 1 to 2.1
+    svg.appendChild(el('rect', {
+      x: l, y: yS(TAU_MAX), width: w-l-r, height: yS(1) - yS(TAU_MAX),
+      fill: '#eff6ff', rx: 0
+    }));
+
+    // Horizontal reference lines
+    for (const [tau, lw, dash] of [[-1, 1.5, ''], [0, 2, ''], [1, 2.5, '8,5'], [2, 1.5, '']]) {
+      svg.appendChild(el('line', {
+        x1: l, x2: w-r, y1: yS(tau), y2: yS(tau),
+        stroke: '#1e293b', 'stroke-width': lw,
+        ...(dash ? {'stroke-dasharray': dash} : {})
+      }));
+    }
+
+    // Zone labels (right side)
+    const zones = [
+      {label: 'Terminal', y: (1 + TAU_MAX) / 2, color: '#3b82f6'},
+      {label: 'Flow', y: 0.5, color: '#22c55e'},
+      {label: 'Deleted', y: (TAU_MIN + 0) / 2, color: '#a16207'},
+    ];
+    for (const z of zones) {
+      const txt = el('text', {
+        x: w - r + 8, y: yS(z.y) + 4,
+        'font-size': '12', 'font-weight': '600',
+        'font-family': 'Inter,sans-serif', 'font-style': 'italic',
+        fill: z.color, 'text-anchor': 'start'
+      });
+      txt.textContent = z.label;
+      svg.appendChild(txt);
+    }
+
+    // Y axis labels (left side)
+    for (const [tau, label] of [[-1, 'τ = −1'], [0, 't = 0'], [1, 't = 1'], [2, 'τ = 2']]) {
+      const txt = el('text', {
+        x: l - 8, y: yS(tau) + 4,
+        'font-size': '11', 'font-weight': '500',
+        'font-family': 'Inter,sans-serif',
+        fill: '#475569', 'text-anchor': 'end'
+      });
+      txt.textContent = label;
+      svg.appendChild(txt);
+    }
+
+    // "Frame birth" label at t=0
+    const fbLabel = el('text', {
+      x: l - 8, y: yS(0) + 18,
+      'font-size': '9', 'font-weight': '500', 'font-style': 'italic',
+      'font-family': 'Inter,sans-serif',
+      fill: '#94a3b8', 'text-anchor': 'end'
+    });
+    fbLabel.textContent = 'Frame birth';
+    svg.appendChild(fbLabel);
+
+    // τ_g sweep line (horizontal, moving)
+    if (tau_g >= TAU_MIN && tau_g <= TAU_MAX) {
+      svg.appendChild(el('line', {
+        x1: l, x2: w-r, y1: yS(tau_g), y2: yS(tau_g),
+        stroke: '#ef4444', 'stroke-width': '1.5',
+        'stroke-dasharray': '4,3', opacity: '0.7'
+      }));
+      // τ_g label
+      const tgLabel = el('text', {
+        x: w - r + 8, y: yS(tau_g) + 4,
+        'font-size': '11', 'font-weight': '600',
+        'font-family': 'Inter,sans-serif',
+        fill: '#ef4444', 'text-anchor': 'start'
+      });
+      tgLabel.textContent = 'τ_g';
+      svg.appendChild(tgLabel);
+    }
+
+    // Frame lines and diamonds
+    for (const frame of FRAMES) {
+      const i = frame.index;
+      const u = frame.u;
+      const isStart = frame.is_start;
+      const cx = xS(i);
+
+      const color = isStart ? BLUE : ORANGE;
+      const lightColor = isStart ? BLUE_LIGHT : ORANGE_LIGHT;
+
+      // Each frame line goes from -u_i to 2
+      const lineBottom = -u;
+      const lineTop = 2;
+
+      // Draw the vertical line (stem)
+      svg.appendChild(el('line', {
+        x1: cx, x2: cx, y1: yS(lineBottom), y2: yS(lineTop),
+        stroke: color, 'stroke-width': '2.5',
+        'marker-end': `url(#${isStart ? 'arrBlue' : 'arrOrange'})`
+      }));
+
+      // Diamond at -u_i (the offset marker)
+      const dSize = 5;
+      const dy = yS(-u);
+      svg.appendChild(el('polygon', {
+        points: `${cx},${dy-dSize} ${cx+dSize},${dy} ${cx},${dy+dSize} ${cx-dSize},${dy}`,
+        fill: color, stroke: 'white', 'stroke-width': '1'
+      }));
+
+      // Current position diamond at tau_g (if visible, i.e. tau_i = tau_g - u >= -u => always, but we show it at tau_i)
+      const tau_i = tau_g - u;
+      if (tau_i >= -u - 0.01 && tau_i <= 2.01) {
+        const posY = yS(tau_i);
+        const dS = 6;
+
+        // Glow behind diamond
+        svg.appendChild(el('circle', {
+          cx: cx, cy: posY, r: 10,
+          fill: color, opacity: '0.15'
+        }));
+
+        // Diamond
+        svg.appendChild(el('polygon', {
+          points: `${cx},${posY-dS} ${cx+dS},${posY} ${cx},${posY+dS} ${cx-dS},${posY}`,
+          fill: color, stroke: 'white', 'stroke-width': '1.5'
+        }));
+
+        // State label below diamond
+        let stateLabel = '';
+        if (tau_i < 0) stateLabel = 'deleted';
+        else if (tau_i < 1) stateLabel = 't=' + Math.min(tau_i, 1).toFixed(2);
+        else stateLabel = 'done';
+
+        const sl = el('text', {
+          x: cx, y: posY + (tau_i < 0 ? -12 : 14),
+          'font-size': '8', 'font-weight': '500',
+          'font-family': 'Inter,sans-serif',
+          fill: color, 'text-anchor': 'middle', opacity: '0.8'
+        });
+        sl.textContent = stateLabel;
+        svg.appendChild(sl);
+      }
+
+      // u_i annotation (dashed line segment from 0 to -u_i) shown only for non-start frames
+      if (!isStart && tau_g < 0.5) {
+        const mid = yS(-u/2);
+        const uLabel = el('text', {
+          x: cx + 12, y: mid + 3,
+          'font-size': '9', 'font-style': 'italic',
+          'font-family': 'Inter,sans-serif',
+          fill: '#94a3b8', 'text-anchor': 'start',
+          opacity: Math.max(0, 1 - tau_g * 2)
+        });
+        uLabel.textContent = 'u_' + i;
+        svg.appendChild(uLabel);
+      }
+    }
+  }
+
+  // Controller
+  const slider = document.getElementById('fcsSlider');
+  const badge = document.getElementById('fcsTauBadge');
+  const playBtn = document.getElementById('fcsPlayBtn');
+  const playI = document.getElementById('fcsPlayIcon');
+  const pauseI = document.getElementById('fcsPauseIcon');
+  const svg = document.getElementById('fcsChart');
+
+  function render(val) {
+    val = Math.max(0, Math.min(200, val));
+    const tau_g = val / 100;
+    badge.innerHTML = '&tau;<sub>g</sub>&thinsp;=&thinsp;' + tau_g.toFixed(2);
+    slider.value = val;
+    draw(svg, tau_g);
+  }
+
+  slider.addEventListener('input', () => render(parseInt(slider.value)));
+
+  let playing = false, animId = null, lastT = 0;
+  function toggle() {
+    playing = !playing;
+    playI.style.display = playing ? 'none' : 'block';
+    pauseI.style.display = playing ? 'block' : 'none';
+    if (playing) { lastT = performance.now(); anim(); }
+    else cancelAnimationFrame(animId);
+  }
+  function anim() {
+    if (!playing) return;
+    const now = performance.now();
+    if (now - lastT >= 40) {
+      let next = parseInt(slider.value) + 1;
+      if (next > 200) next = 0;
+      render(next);
+      lastT = now;
+    }
+    animId = requestAnimationFrame(anim);
+  }
+  playBtn.addEventListener('click', toggle);
+
+  const widget = document.getElementById('fc-schedule');
+  widget.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') { e.preventDefault(); toggle(); }
+    if (e.code === 'ArrowRight') { e.preventDefault(); render(parseInt(slider.value) + 2); }
+    if (e.code === 'ArrowLeft') { e.preventDefault(); render(parseInt(slider.value) - 2); }
+  });
+  widget.setAttribute('tabindex', '0');
+
+  render(0);
+})();
+</script>
           <p class="caption">
             <strong>Figure 2:</strong> Illustration of the extended time scheduler for Flowception training. In Flowception, each frame has its own denoising time which depends on its insertion time. The global extended time $\tau_g$ progresses from 0 to 2, where insertion of new frames only occurs when $\tau_g < 1$. Starting frames (in blue) are instantiated at $\tau_g = 0$, while other frames (in orange) are inserted later and thus have a delay.
           </p>
@@ -718,8 +1114,457 @@
       <div class="comparison-section">
         <h3 style="text-align: center; margin-bottom: 2rem;">Comparison with Baseline Methods</h3>
         
-        <div class="comparison-header">
-          <img src="static/animations/flowception_extended_and_visible.gif" alt="Flowception scheduling">
+        <div class="comparison-header" style="grid-template-columns:1fr; gap:2rem;">
+          <!-- Flowception Interactive Slider Widget -->
+<!-- Replace the <img src="static/animations/flowception_extended_and_visible.gif"> with this -->
+<div class="flowception-slider" id="flowception-slider">
+  <div class="fc-header">
+    <span class="fc-title">Sampling progression</span>
+    <span class="fc-tau" id="fcTauBadge">&tau;<sub>g</sub>&thinsp;=&thinsp;0.00</span>
+  </div>
+
+  <div class="fc-charts">
+    <div class="fc-chart-block">
+      <div class="fc-chart-label">Extended-time schedule &middot; &tau;<sub>i</sub></div>
+      <div class="fc-chart-wrap" style="position:relative">
+        <svg id="fcChartExt" class="fc-svg" viewBox="0 0 520 220"></svg>
+        <div class="fc-toast" id="fcToast"></div>
+      </div>
+    </div>
+    <div class="fc-chart-block">
+      <div class="fc-chart-label">Visible schedule &middot; t<sub>i</sub></div>
+      <svg id="fcChartVis" class="fc-svg" viewBox="0 0 520 180"></svg>
+    </div>
+  </div>
+
+  <div class="fc-controls">
+    <div class="fc-slider-row">
+      <input type="range" class="fc-range" id="fcSlider" min="0" max="49" value="0" step="1" />
+      <button class="fc-play" id="fcPlayBtn" title="Play / Pause">
+        <svg id="fcPlayIcon" viewBox="0 0 24 24" width="12" height="12"><polygon points="7,3 21,12 7,21" fill="currentColor"/></svg>
+        <svg id="fcPauseIcon" viewBox="0 0 24 24" width="12" height="12" style="display:none">
+          <rect x="5" y="3" width="4" height="18" fill="currentColor"/>
+          <rect x="15" y="3" width="4" height="18" fill="currentColor"/>
+        </svg>
+      </button>
+    </div>
+    <div class="fc-range-labels">
+      <span>&tau;<sub>g</sub> = 0</span>
+      <span>2</span>
+    </div>
+  </div>
+
+  <div class="fc-legend">
+    <div class="fc-legend-item"><span class="fc-swatch" style="background:#e2e8f0"></span>Invisible</div>
+    <div class="fc-legend-item"><span class="fc-swatch" style="background:#4a8c6f"></span>Flow</div>
+    <div class="fc-legend-item"><span class="fc-swatch" style="background:#2c5e44"></span>Terminal</div>
+    <div class="fc-legend-item"><span class="fc-swatch" style="background:#d97706"></span>Newborn</div>
+    <div class="fc-legend-item"><span class="fc-swatch" style="background:#2563eb"></span>Parent</div>
+  </div>
+</div>
+
+<style>
+/* ---- Flowception Slider Widget ---- */
+/* Designed to sit inside .comparison-header as a replacement for the GIF */
+.flowception-slider {
+  background: var(--background-primary, #fff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: var(--border-radius, 12px);
+  padding: 1.5rem 2rem 1.25rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.fc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1rem;
+}
+
+.fc-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-light, #94a3b8);
+}
+
+.fc-tau {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--primary-color, #2563eb);
+  background: rgba(37, 99, 235, 0.07);
+  padding: 0.2em 0.55em;
+  border-radius: 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+.fc-charts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.fc-chart-block {}
+
+.fc-chart-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-light, #94a3b8);
+  margin-bottom: 0.35rem;
+}
+
+.fc-svg {
+  width: 100%;
+  display: block;
+}
+
+.fc-chart-wrap {
+  position: relative;
+}
+
+.fc-toast {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  padding: 0.25em 0.5em;
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  background: rgba(217, 119, 6, 0.1);
+  color: #b45309;
+  border: 1px solid rgba(217, 119, 6, 0.2);
+}
+
+.fc-toast.show {
+  opacity: 1;
+}
+
+/* Controls */
+.fc-controls {
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--border-color, #e2e8f0);
+}
+
+.fc-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.fc-range {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  height: 4px;
+  background: var(--border-color, #e2e8f0);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.fc-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text-primary, #1e293b);
+  border: 2.5px solid white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  cursor: grab;
+  transition: box-shadow 0.15s ease;
+}
+
+.fc-range::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15), 0 1px 3px rgba(0,0,0,0.25);
+}
+
+.fc-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text-primary, #1e293b);
+  border: 2.5px solid white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  cursor: grab;
+}
+
+.fc-play {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--background-secondary, #f8fafc);
+  border: 1.5px solid var(--border-color, #e2e8f0);
+  color: var(--text-primary, #1e293b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.fc-play:hover {
+  background: var(--text-primary, #1e293b);
+  border-color: var(--text-primary, #1e293b);
+  color: white;
+}
+
+.fc-range-labels {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.2rem 0 0;
+  margin-right: calc(30px + 0.6rem);
+}
+
+.fc-range-labels span {
+  font-size: 0.55rem;
+  color: var(--text-light, #94a3b8);
+}
+
+/* Legend */
+.fc-legend {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 0.7rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border-color, #e2e8f0);
+}
+
+.fc-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.55rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary, #64748b);
+}
+
+.fc-swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  display: inline-block;
+}
+</style>
+
+<script>
+(function() {
+  const FC_TIMELINE = [{"tau_g": 0.0, "tau_i": [0.0, -0.8702, -0.2868, -0.6031, -0.7775, 0.0], "t": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "visible_indices": [0, 5], "new_visible_pos": [0, 1], "new_global_indices": [0, 5], "parent_timer": [3, 0, 0, 0, 0, 0], "parent_globals": [0]}, {"tau_g": 0.0408, "tau_i": [0.0408, -0.8294, -0.246, -0.5623, -0.7367, 0.0408], "t": [0.0408, 0.0, 0.0, 0.0, 0.0, 0.0408], "visible_indices": [0, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [2, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 0.0816, "tau_i": [0.0816, -0.7886, -0.2052, -0.5215, -0.6959, 0.0816], "t": [0.0816, 0.0, 0.0, 0.0, 0.0, 0.0816], "visible_indices": [0, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [1, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 0.1224, "tau_i": [0.1224, -0.7478, -0.1644, -0.4807, -0.6551, 0.1224], "t": [0.1224, 0.0, 0.0, 0.0, 0.0, 0.1224], "visible_indices": [0, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 0.1633, "tau_i": [0.1633, -0.707, -0.1236, -0.4399, -0.6143, 0.1633], "t": [0.1633, 0.0, 0.0, 0.0, 0.0, 0.1633], "visible_indices": [0, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 0.2041, "tau_i": [0.2041, -0.6662, -0.0827, -0.3991, -0.5735, 0.2041], "t": [0.2041, 0.0, 0.0, 0.0, 0.0, 0.2041], "visible_indices": [0, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 0.2449, "tau_i": [0.2449, -0.6254, -0.0419, -0.3583, -0.5326, 0.2449], "t": [0.2449, 0.0, 0.0, 0.0, 0.0, 0.2449], "visible_indices": [0, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 0.2857, "tau_i": [0.2857, -0.5845, -0.0011, -0.3174, -0.4918, 0.2857], "t": [0.2857, 0.0, 0.0, 0.0, 0.0, 0.2857], "visible_indices": [0, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 0.3265, "tau_i": [0.3265, -0.5437, 0.0397, -0.2766, -0.451, 0.3265], "t": [0.3265, 0.0, 0.0397, 0.0, 0.0, 0.3265], "visible_indices": [0, 2, 5], "new_visible_pos": [1], "new_global_indices": [2], "parent_timer": [3, 0, 0, 0, 0, 0], "parent_globals": [0]}, {"tau_g": 0.3673, "tau_i": [0.3673, -0.5029, 0.0805, -0.2358, -0.4102, 0.3673], "t": [0.3673, 0.0, 0.0805, 0.0, 0.0, 0.3673], "visible_indices": [0, 2, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [2, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 0.4082, "tau_i": [0.4082, -0.4621, 0.1213, -0.195, -0.3694, 0.4082], "t": [0.4082, 0.0, 0.1213, 0.0, 0.0, 0.4082], "visible_indices": [0, 2, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [1, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 0.449, "tau_i": [0.449, -0.4213, 0.1622, -0.1542, -0.3286, 0.449], "t": [0.449, 0.0, 0.1622, 0.0, 0.0, 0.449], "visible_indices": [0, 2, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 0.4898, "tau_i": [0.4898, -0.3805, 0.203, -0.1134, -0.2877, 0.4898], "t": [0.4898, 0.0, 0.203, 0.0, 0.0, 0.4898], "visible_indices": [0, 2, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 0.5306, "tau_i": [0.5306, -0.3396, 0.2438, -0.0725, -0.2469, 0.5306], "t": [0.5306, 0.0, 0.2438, 0.0, 0.0, 0.5306], "visible_indices": [0, 2, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 0.5714, "tau_i": [0.5714, -0.2988, 0.2846, -0.0317, -0.2061, 0.5714], "t": [0.5714, 0.0, 0.2846, 0.0, 0.0, 0.5714], "visible_indices": [0, 2, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 0.6122, "tau_i": [0.6122, -0.258, 0.3254, 0.0091, -0.1653, 0.6122], "t": [0.6122, 0.0, 0.3254, 0.0091, 0.0, 0.6122], "visible_indices": [0, 2, 3, 5], "new_visible_pos": [2], "new_global_indices": [3], "parent_timer": [0, 0, 3, 0, 0, 0], "parent_globals": [2]}, {"tau_g": 0.6531, "tau_i": [0.6531, -0.2172, 0.3662, 0.0499, -0.1245, 0.6531], "t": [0.6531, 0.0, 0.3662, 0.0499, 0.0, 0.6531], "visible_indices": [0, 2, 3, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 2, 0, 0, 0], "parent_globals": []}, {"tau_g": 0.6939, "tau_i": [0.6939, -0.1764, 0.4071, 0.0907, -0.0837, 0.6939], "t": [0.6939, 0.0, 0.4071, 0.0907, 0.0, 0.6939], "visible_indices": [0, 2, 3, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 1, 0, 0, 0], "parent_globals": []}, {"tau_g": 0.7347, "tau_i": [0.7347, -0.1356, 0.4479, 0.1315, -0.0428, 0.7347], "t": [0.7347, 0.0, 0.4479, 0.1315, 0.0, 0.7347], "visible_indices": [0, 2, 3, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 0.7755, "tau_i": [0.7755, -0.0947, 0.4887, 0.1724, -0.002, 0.7755], "t": [0.7755, 0.0, 0.4887, 0.1724, 0.0, 0.7755], "visible_indices": [0, 2, 3, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 0.8163, "tau_i": [0.8163, -0.0539, 0.5295, 0.2132, 0.0388, 0.8163], "t": [0.8163, 0.0, 0.5295, 0.2132, 0.0388, 0.8163], "visible_indices": [0, 2, 3, 4, 5], "new_visible_pos": [3], "new_global_indices": [4], "parent_timer": [0, 0, 0, 3, 0, 0], "parent_globals": [3]}, {"tau_g": 0.8571, "tau_i": [0.8571, -0.0131, 0.5703, 0.254, 0.0796, 0.8571], "t": [0.8571, 0.0, 0.5703, 0.254, 0.0796, 0.8571], "visible_indices": [0, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 2, 0, 0], "parent_globals": []}, {"tau_g": 0.898, "tau_i": [0.898, 0.0277, 0.6111, 0.2948, 0.1204, 0.898], "t": [0.898, 0.0277, 0.6111, 0.2948, 0.1204, 0.898], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [1], "new_global_indices": [1], "parent_timer": [3, 0, 0, 1, 0, 0], "parent_globals": [0]}, {"tau_g": 0.9388, "tau_i": [0.9388, 0.0685, 0.652, 0.3356, 0.1612, 0.9388], "t": [0.9388, 0.0685, 0.652, 0.3356, 0.1612, 0.9388], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [2, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 0.9796, "tau_i": [0.9796, 0.1093, 0.6928, 0.3764, 0.2021, 0.9796], "t": [0.9796, 0.1093, 0.6928, 0.3764, 0.2021, 0.9796], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [1, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.0204, "tau_i": [1.0204, 0.1502, 0.7336, 0.4173, 0.2429, 1.0204], "t": [1.0, 0.1502, 0.7336, 0.4173, 0.2429, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.0612, "tau_i": [1.0612, 0.191, 0.7744, 0.4581, 0.2837, 1.0612], "t": [1.0, 0.191, 0.7744, 0.4581, 0.2837, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.102, "tau_i": [1.102, 0.2318, 0.8152, 0.4989, 0.3245, 1.102], "t": [1.0, 0.2318, 0.8152, 0.4989, 0.3245, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.1429, "tau_i": [1.1429, 0.2726, 0.856, 0.5397, 0.3653, 1.1429], "t": [1.0, 0.2726, 0.856, 0.5397, 0.3653, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.1837, "tau_i": [1.1837, 0.3134, 0.8969, 0.5805, 0.4061, 1.1837], "t": [1.0, 0.3134, 0.8969, 0.5805, 0.4061, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.2245, "tau_i": [1.2245, 0.3542, 0.9377, 0.6213, 0.447, 1.2245], "t": [1.0, 0.3542, 0.9377, 0.6213, 0.447, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.2653, "tau_i": [1.2653, 0.3951, 0.9785, 0.6622, 0.4878, 1.2653], "t": [1.0, 0.3951, 0.9785, 0.6622, 0.4878, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.3061, "tau_i": [1.3061, 0.4359, 1.0193, 0.703, 0.5286, 1.3061], "t": [1.0, 0.4359, 1.0, 0.703, 0.5286, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.3469, "tau_i": [1.3469, 0.4767, 1.0601, 0.7438, 0.5694, 1.3469], "t": [1.0, 0.4767, 1.0, 0.7438, 0.5694, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.3878, "tau_i": [1.3878, 0.5175, 1.1009, 0.7846, 0.6102, 1.3878], "t": [1.0, 0.5175, 1.0, 0.7846, 0.6102, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.4286, "tau_i": [1.4286, 0.5583, 1.1418, 0.8254, 0.651, 1.4286], "t": [1.0, 0.5583, 1.0, 0.8254, 0.651, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.4694, "tau_i": [1.4694, 0.5991, 1.1826, 0.8662, 0.6919, 1.4694], "t": [1.0, 0.5991, 1.0, 0.8662, 0.6919, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.5102, "tau_i": [1.5102, 0.64, 1.2234, 0.9071, 0.7327, 1.5102], "t": [1.0, 0.64, 1.0, 0.9071, 0.7327, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.551, "tau_i": [1.551, 0.6808, 1.2642, 0.9479, 0.7735, 1.551], "t": [1.0, 0.6808, 1.0, 0.9479, 0.7735, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.5918, "tau_i": [1.5918, 0.7216, 1.305, 0.9887, 0.8143, 1.5918], "t": [1.0, 0.7216, 1.0, 0.9887, 0.8143, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.6327, "tau_i": [1.6327, 0.7624, 1.3458, 1.0295, 0.8551, 1.6327], "t": [1.0, 0.7624, 1.0, 1.0, 0.8551, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.6735, "tau_i": [1.6735, 0.8032, 1.3867, 1.0703, 0.8959, 1.6735], "t": [1.0, 0.8032, 1.0, 1.0, 0.8959, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.7143, "tau_i": [1.7143, 0.844, 1.4275, 1.1111, 0.9368, 1.7143], "t": [1.0, 0.844, 1.0, 1.0, 0.9368, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.7551, "tau_i": [1.7551, 0.8849, 1.4683, 1.152, 0.9776, 1.7551], "t": [1.0, 0.8849, 1.0, 1.0, 0.9776, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.7959, "tau_i": [1.7959, 0.9257, 1.5091, 1.1928, 1.0184, 1.7959], "t": [1.0, 0.9257, 1.0, 1.0, 1.0, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.8367, "tau_i": [1.8367, 0.9665, 1.5499, 1.2336, 1.0592, 1.8367], "t": [1.0, 0.9665, 1.0, 1.0, 1.0, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.8776, "tau_i": [1.8776, 1.0073, 1.5907, 1.2744, 1.1, 1.8776], "t": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.9184, "tau_i": [1.9184, 1.0481, 1.6316, 1.3152, 1.1408, 1.9184], "t": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 1.9592, "tau_i": [1.9592, 1.0889, 1.6724, 1.356, 1.1816, 1.9592], "t": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}, {"tau_g": 2.0, "tau_i": [2.0, 1.1298, 1.7132, 1.3969, 1.2225, 2.0], "t": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0], "visible_indices": [0, 1, 2, 3, 4, 5], "new_visible_pos": [], "new_global_indices": [], "parent_timer": [0, 0, 0, 0, 0, 0], "parent_globals": []}];
+  const FC_TOTAL = 6;
+  const FC_HL = 3;
+
+  const EXT = { l:42, r:12, t:10, b:28, w:520, h:220 };
+  const VIS = { l:42, r:12, t:10, b:28, w:520, h:180 };
+
+  const C = {
+    deleted:'#e2e8f0', flow:'#4a8c6f', terminal:'#2c5e44',
+    birth:'#d97706', birthGlow:'rgba(217,119,6,0.25)',
+    parent:'#2563eb', parentGlow:'rgba(37,99,235,0.2)',
+  };
+
+  function lerp(a,b,t){ return a+(b-a)*t; }
+  function lerpHex(h1,h2,t){
+    const p=s=>parseInt(s,16);
+    const r=Math.round(lerp(p(h1.slice(1,3)),p(h2.slice(1,3)),t));
+    const g=Math.round(lerp(p(h1.slice(3,5)),p(h2.slice(3,5)),t));
+    const b=Math.round(lerp(p(h1.slice(5,7)),p(h2.slice(5,7)),t));
+    return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
+  }
+
+  function el(tag,attrs={}){
+    const e=document.createElementNS('http://www.w3.org/2000/svg',tag);
+    for(const[k,v] of Object.entries(attrs)) e.setAttribute(k,v);
+    return e;
+  }
+
+  function drawExt(svg, s){
+    svg.innerHTML='';
+    const {l,r,t,b,w,h}=EXT, pW=w-l-r, pH=h-t-b;
+    const yMin=-1.05, yMax=2.05;
+    const yS=v=>t+pH*(1-(v-yMin)/(yMax-yMin));
+    const xS=i=>l+pW*(i+0.5)/FC_TOTAL;
+    const barW=pW/FC_TOTAL*0.52;
+
+    // Defs
+    const defs=el('defs');
+    for(const[id,std,col] of [['fcBg','4',C.birthGlow],['fcPg','3',C.parentGlow]]){
+      const f=el('filter',{id,x:'-50%',y:'-50%',width:'200%',height:'200%'});
+      f.appendChild(el('feGaussianBlur',{stdDeviation:std,in:'SourceGraphic',result:'bl'}));
+      const m=el('feMerge'); m.appendChild(el('feMergeNode',{in:'bl'})); m.appendChild(el('feMergeNode',{in:'SourceGraphic'}));
+      f.appendChild(m); defs.appendChild(f);
+    }
+    svg.appendChild(defs);
+
+    // Grid
+    for(const yv of [-1,-0.5,0,0.5,1,1.5,2]){
+      svg.appendChild(el('line',{x1:l,x2:w-r,y1:yS(yv),y2:yS(yv),stroke:yv===0?'#94a3b8':'#f1f5f9','stroke-width':yv===0?'0.8':'0.6'}));
+    }
+    // t=1 ref
+    svg.appendChild(el('line',{x1:l,x2:w-r,y1:yS(1),y2:yS(1),stroke:'#94a3b8','stroke-width':'0.8','stroke-dasharray':'4,3'}));
+
+    // Y labels
+    for(const yv of [-1,0,1,2]){
+      const lb=el('text',{x:l-6,y:yS(yv)+3,'text-anchor':'end','font-size':'11','font-family':'Inter,sans-serif',fill:'#94a3b8'});
+      lb.textContent=yv; svg.appendChild(lb);
+    }
+
+    // Bars
+    const tau_i=s.tau_i;
+    for(let i=0;i<FC_TOTAL;i++){
+      const v=tau_i[i], cx=xS(i), y0=yS(0), yV=yS(v);
+      let col=v<0?C.deleted:v<1?C.flow:C.terminal;
+      const isNew=s.new_global_indices.includes(i);
+      const pStr=s.parent_timer[i]/FC_HL;
+
+      if(isNew&&v>=0) col=C.birth;
+      else if(pStr>0&&v>=0&&v<1) col=lerpHex(C.flow,C.parent,pStr);
+
+      const bY=Math.min(y0,yV), bH=Math.abs(yV-y0);
+
+      if(isNew&&v>=0){
+        svg.appendChild(el('rect',{x:cx-barW/2-3,y:bY-3,width:barW+6,height:bH+6,rx:4,fill:C.birthGlow,filter:'url(#fcBg)'}));
+      } else if(pStr>0&&v>=0){
+        svg.appendChild(el('rect',{x:cx-barW/2-2,y:bY-2,width:barW+4,height:bH+4,rx:3,fill:C.parentGlow,opacity:pStr*0.6,filter:'url(#fcPg)'}));
+      }
+
+      const rc=el('rect',{x:cx-barW/2,y:bY,width:barW,height:Math.max(bH,0.5),rx:3,fill:col});
+      svg.appendChild(rc);
+
+      // X label
+      const lb=el('text',{x:cx,y:h-b+16,'text-anchor':'middle','font-size':'11','font-family':'Inter,sans-serif',fill:'#94a3b8'});
+      lb.textContent=i; svg.appendChild(lb);
+    }
+  }
+
+  function drawVis(svg, s){
+    svg.innerHTML='';
+    const {l,r,t,b,w,h}=VIS, pW=w-l-r, pH=h-t-b;
+    const vis=s.visible_indices, n=vis.length;
+    if(!n) return;
+
+    const defs=el('defs');
+    for(const[id,std] of [['fcBgV','4'],['fcPgV','3']]){
+      const f=el('filter',{id,x:'-50%',y:'-50%',width:'200%',height:'200%'});
+      f.appendChild(el('feGaussianBlur',{stdDeviation:std,in:'SourceGraphic',result:'bl'}));
+      const m=el('feMerge'); m.appendChild(el('feMergeNode',{in:'bl'})); m.appendChild(el('feMergeNode',{in:'SourceGraphic'}));
+      f.appendChild(m); defs.appendChild(f);
+    }
+    svg.appendChild(defs);
+
+    const yS=v=>t+pH*(1-v/1.05);
+    const xS=p=>l+pW*(p+0.5)/Math.max(n,FC_TOTAL);
+    const barW=pW/Math.max(n,FC_TOTAL)*0.52;
+    const yBase=yS(0);
+
+    // Grid
+    for(const yv of [0.25,0.5,0.75,1]){
+      svg.appendChild(el('line',{x1:l,x2:w-r,y1:yS(yv),y2:yS(yv),stroke:'#f1f5f9','stroke-width':'0.6'}));
+    }
+
+    for(const yv of [0,0.5,1]){
+      const lb=el('text',{x:l-6,y:yS(yv)+3,'text-anchor':'end','font-size':'11','font-family':'Inter,sans-serif',fill:'#94a3b8'});
+      lb.textContent=yv.toFixed(1); svg.appendChild(lb);
+    }
+
+    for(let p=0;p<n;p++){
+      const gi=vis[p], v=s.t[gi], cx=xS(p), yV=yS(v);
+      const bH=Math.max(yBase-yV,0.5);
+      let col=v>=1-1e-6?C.terminal:C.flow;
+      const isNew=s.new_visible_pos.includes(p);
+      const pStr=s.parent_timer[gi]/FC_HL;
+
+      if(isNew) col=C.birth;
+      else if(pStr>0&&v<1-1e-6) col=lerpHex(C.flow,C.parent,pStr);
+
+      if(isNew){
+        svg.appendChild(el('rect',{x:cx-barW/2-3,y:yV-3,width:barW+6,height:bH+6,rx:4,fill:C.birthGlow,filter:'url(#fcBgV)'}));
+      } else if(pStr>0&&v<1-1e-6){
+        svg.appendChild(el('rect',{x:cx-barW/2-2,y:yV-2,width:barW+4,height:bH+4,rx:3,fill:C.parentGlow,opacity:pStr*0.6,filter:'url(#fcPgV)'}));
+      }
+
+      svg.appendChild(el('rect',{x:cx-barW/2,y:yV,width:barW,height:bH,rx:3,fill:col}));
+
+      const lb=el('text',{x:cx,y:h-b+16,'text-anchor':'middle','font-size':'11','font-family':'Inter,sans-serif',fill:'#94a3b8'});
+      lb.textContent=gi; svg.appendChild(lb);
+    }
+  }
+
+  // Controller
+  const slider=document.getElementById('fcSlider');
+  const badge=document.getElementById('fcTauBadge');
+  const playBtn=document.getElementById('fcPlayBtn');
+  const playI=document.getElementById('fcPlayIcon');
+  const pauseI=document.getElementById('fcPauseIcon');
+  const extSvg=document.getElementById('fcChartExt');
+  const visSvg=document.getElementById('fcChartVis');
+  const toast=document.getElementById('fcToast');
+  let toastTO=null;
+
+  function showToast(ids){
+    toast.textContent='\u2726 Born: frame '+ids.join(', ');
+    toast.classList.add('show');
+    clearTimeout(toastTO);
+    toastTO=setTimeout(()=>toast.classList.remove('show'),700);
+  }
+
+  function render(idx){
+    idx=Math.max(0,Math.min(FC_TIMELINE.length-1,idx));
+    const s=FC_TIMELINE[idx];
+    badge.innerHTML='&tau;<sub>g</sub>&thinsp;=&thinsp;'+s.tau_g.toFixed(2);
+    slider.value=idx;
+    drawExt(extSvg,s);
+    drawVis(visSvg,s);
+    if(s.new_global_indices.length) showToast(s.new_global_indices);
+  }
+
+  slider.addEventListener('input',()=>render(parseInt(slider.value)));
+
+  let playing=false, animId=null, lastT=0;
+  function toggle(){
+    playing=!playing;
+    playI.style.display=playing?'none':'block';
+    pauseI.style.display=playing?'block':'none';
+    if(playing){ lastT=performance.now(); anim(); }
+    else cancelAnimationFrame(animId);
+  }
+  function anim(){
+    if(!playing) return;
+    const now=performance.now();
+    if(now-lastT>=120){
+      let next=parseInt(slider.value)+1;
+      if(next>=FC_TIMELINE.length) next=0;
+      render(next);
+      lastT=now;
+    }
+    animId=requestAnimationFrame(anim);
+  }
+  playBtn.addEventListener('click',toggle);
+
+  // Keyboard only when widget is hovered/focused
+  const widget=document.getElementById('flowception-slider');
+  widget.addEventListener('keydown',(e)=>{
+    if(e.code==='Space'){ e.preventDefault(); toggle(); }
+    if(e.code==='ArrowRight'){ e.preventDefault(); render(parseInt(slider.value)+1); }
+    if(e.code==='ArrowLeft'){ e.preventDefault(); render(parseInt(slider.value)-1); }
+  });
+  widget.setAttribute('tabindex','0');
+
+  render(0);
+})();
+</script>
           <div class="method-description">
             <p>
               Starting from a small set of frames, Flowception learns to flow existing frames while potentially inserting new frames anywhere in the sequence. Since the latest insertion happens at \( \tau_g = 1 \), the maximum number of steps is capped to \( \frac{2}{h} \) where \( h \) is the sampling step size.
