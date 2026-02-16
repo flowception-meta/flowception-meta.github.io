@@ -584,6 +584,214 @@
       background: var(--primary-color);
     }
     
+    /* Updates Box */
+    .updates-box {
+      max-width: 540px;
+      margin: 2.5rem auto 0;
+      background: linear-gradient(135deg, #f0f9ff 0%, #f0fdf4 50%, #fefce8 100%);
+      border: 1px solid #d1e6f0;
+      border-radius: 0.75rem;
+      padding: 1.4rem 1.75rem 1.25rem;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .updates-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #3b82f6, #10b981, #f59e0b);
+    }
+
+    .updates-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .updates-title i {
+      font-size: 0.85rem;
+      background: linear-gradient(135deg, #3b82f6, #10b981);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .updates-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .updates-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .update-check {
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .update-done .update-check {
+      background: linear-gradient(135deg, #10b981, #059669);
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35);
+    }
+
+    .update-done .update-check svg {
+      width: 12px;
+      height: 12px;
+      fill: none;
+      stroke: white;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .update-todo .update-check {
+      background: white;
+      border: 2px dashed #cbd5e1;
+    }
+
+    .update-date {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+      padding: 0.15em 0.5em;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .update-done .update-date {
+      background: rgba(16, 185, 129, 0.1);
+      color: #059669;
+    }
+
+    .update-todo .update-date {
+      background: rgba(148, 163, 184, 0.12);
+      color: #94a3b8;
+    }
+
+    .update-done .update-text {
+      color: var(--text-dark);
+      font-weight: 500;
+    }
+
+    .update-todo .update-text {
+      color: var(--text-light);
+    }
+
+    /* Text-to-Video Grid */
+    .t2v-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .t2v-card {
+      background: var(--bg-light);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .t2v-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+
+    .t2v-video-wrap {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      background: #0f172a;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .t2v-video-wrap video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .t2v-play-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.25);
+      transition: opacity 0.25s ease, background 0.25s ease;
+    }
+
+    .t2v-play-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .t2v-video-wrap:hover .t2v-play-overlay:not(.hidden) {
+      background: rgba(0,0,0,0.35);
+    }
+
+    .t2v-play-circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      transition: transform 0.2s ease;
+    }
+
+    .t2v-video-wrap:hover .t2v-play-circle {
+      transform: scale(1.08);
+    }
+
+    .t2v-play-circle svg {
+      width: 18px;
+      height: 18px;
+      margin-left: 2px;
+      fill: var(--text-dark, #1e293b);
+    }
+
+    .t2v-prompt {
+      padding: 0.6rem 0.75rem;
+      font-size: 0.78rem;
+      color: var(--text-light);
+      line-height: 1.4;
+      font-style: italic;
+      border-top: 1px solid var(--border-color);
+      background: white;
+    }
+
     /* Responsive Design */
     @media (max-width: 1024px) {
       .method-grid,
@@ -595,6 +803,17 @@
       .comparison-grid {
         grid-template-columns: 1fr;
         gap: 1.5rem;
+      }
+
+      .t2v-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .t2v-grid {
+        grid-template-columns: 1fr;
+        max-width: 320px;
       }
     }
     
@@ -663,11 +882,36 @@
           <i class="ai ai-arxiv"></i>
           <span>arXiv</span>
         </a>
-        <span class="btn btn-disabled" title="Coming soon">
+        
+        <a href="https://github.com/facebookresearch/flowception" target="_blank" rel="noopener" class="btn btn-primary">
           <i class="fab fa-github"></i>
-          <span>Code (Coming Soon)</span>
-        </span>
+          <span>Code</span>
+        </a>
+        
       </div>
+
+      <!-- Updates / Roadmap -->
+      <div class="updates-box">
+        <div class="updates-title"><i class="fas fa-rocket"></i> Roadmap</div>
+        <ul class="updates-list">
+          <li class="update-done">
+            <span class="update-check"><svg viewBox="0 0 24 24"><polyline points="4,12 10,18 20,6"/></svg></span>
+            <span class="update-date">Feb 2026</span>
+            <span class="update-text">Text-to-video snapshots with LTX-Video 2B</span>
+          </li>
+          <li class="update-done">
+            <span class="update-check"><svg viewBox="0 0 24 24"><polyline points="4,12 10,18 20,6"/></svg></span>
+            <span class="update-date">Feb 2026</span>
+            <span class="update-text">Open-source tutorial notebook</span>
+          </li>
+          <li class="update-todo">
+            <span class="update-check"></span>
+            <span class="update-date">Coming soon</span>
+            <span class="update-text">Open-source codebase</span>
+          </li>
+        </ul>
+      </div>
+
     </div>
   </section>
 
@@ -1618,12 +1862,111 @@
     </div>
   </section>
 
-  <!-- Qualitative Results -->
+  <!-- Examples -->
   <section id="examples" class="section-white">
     <div class="container">
-      <h2>Qualitative Results</h2>
-      <p style="text-align: center; color: var(--text-light); margin-top: 1rem; margin-bottom: 3rem;">
-        Examples of video interpolation and image-to-video generation across different datasets.
+      <h2>Examples</h2>
+
+
+      <!-- T2V subsection -->
+      <h3 style="text-align:center; margin-bottom:0.75rem;">Text-to-Video Generation</h3>
+      <p style="text-align:center; color:var(--text-light); max-width:750px; margin:0 auto 2rem; font-size:0.95rem; line-height:1.7;">
+        We adapt the <a href="https://huggingface.co/Lightricks/LTX-Video" target="_blank" rel="noopener" style="color:var(--primary-color); font-weight:500;">LTX-Video 2B (0.9.5 distilled)</a> architecture to be compatible with Flowception and train it on a general domain internal data split of approximately 5 million text-video pairs. Below are example generations.
+      </p>
+
+      <div class="t2v-grid">
+        
+
+        <div class="t2v-card">
+          <div class="t2v-video-wrap">
+            <video loop muted playsinline>
+              <source src="static/animations/videos/boat_dolphin_1.mp4" type="video/mp4">
+            </video>
+            <div class="t2v-play-overlay">
+              <div class="t2v-play-circle">
+                <svg viewBox="0 0 24 24"><polygon points="8,4 20,12 8,20"/></svg>
+              </div>
+            </div>
+          </div>
+          <p class="t2v-prompt">"A boat cruising in the sea.  In the background the sunset casts a warm light over the water. In the distance we can see an island that resembles a mountain."</p>
+        </div>
+
+        <div class="t2v-card">
+          <div class="t2v-video-wrap">
+            <video loop muted playsinline>
+              <source src="static/animations/videos/rose_2.mp4" type="video/mp4">
+            </video>
+            <div class="t2v-play-overlay">
+              <div class="t2v-play-circle">
+                <svg viewBox="0 0 24 24"><polygon points="8,4 20,12 8,20"/></svg>
+              </div>
+            </div>
+          </div>
+          <p class="t2v-prompt">"Pretty farmer. agriculture business concept. farmer girl examines the rose crops at sunset. farmer walk agriculture lifestyle rose concept. farmer works in a field with roses at sunset."</p>
+        </div>
+
+        <div class="t2v-card">
+          <div class="t2v-video-wrap">
+            <video loop muted playsinline>
+              <source src="static/animations/videos/horse_1.mp4" type="video/mp4">
+            </video>
+            <div class="t2v-play-overlay">
+              <div class="t2v-play-circle">
+                <svg viewBox="0 0 24 24"><polygon points="8,4 20,12 8,20"/></svg>
+              </div>
+            </div>
+          </div>
+          <p class="t2v-prompt">"A wild horse walking by a lake. Beautiful scene."</p>
+        </div>
+
+        <!-- Placeholders — replace src and prompt when ready -->
+        <div class="t2v-card">
+          <div class="t2v-video-wrap">
+            <video loop muted playsinline>
+              <source src="static/animations/videos/bear_1.mp4" type="video/mp4">
+            </video>
+            <div class="t2v-play-overlay">
+              <div class="t2v-play-circle">
+                <svg viewBox="0 0 24 24"><polygon points="8,4 20,12 8,20"/></svg>
+              </div>
+            </div>
+          </div>
+          <p class="t2v-prompt">"A cute bear in a knitted blue sweater and round glasses lounges on a sofa, reading a newspaper. A packed bookshelf and a crackling fireplace glow warmly in the background."</p>
+        </div>
+
+        <div class="t2v-card">
+          <div class="t2v-video-wrap">
+            <video loop muted playsinline>
+              <source src="static/animations/videos/jaguar_1.mp4" type="video/mp4">
+            </video>
+            <div class="t2v-play-overlay">
+              <div class="t2v-play-circle">
+                <svg viewBox="0 0 24 24"><polygon points="8,4 20,12 8,20"/></svg>
+              </div>
+            </div>
+          </div>
+          <p class="t2v-prompt">"A jaguar in a lake eating a chocolate cake."</p>
+        </div>
+
+        <div class="t2v-card">
+          <div class="t2v-video-wrap">
+            <video loop muted playsinline>
+              <source src="static/animations/videos/taxi_1.mp4" type="video/mp4">
+            </video>
+            <div class="t2v-play-overlay">
+              <div class="t2v-play-circle">
+                <svg viewBox="0 0 24 24"><polygon points="8,4 20,12 8,20"/></svg>
+              </div>
+            </div>
+          </div>
+          <p class="t2v-prompt">"A yellow taxi driving through rainy New York streets at night, neon reflections on wet asphalt and light mist in the air."</p>
+        </div>
+      </div>
+
+      <!-- Interpolation & I2V subsection -->
+      <h3 style="text-align:center; margin-top:4rem; margin-bottom:0.75rem;">Interpolation & Image-to-Video</h3>
+      <p style="text-align:center; color:var(--text-light); margin:0 auto 2rem; font-size:0.95rem;">
+        Video interpolation and image-to-video generation across different datasets.
       </p>
       
       <div id="results-carousel" class="carousel results-carousel">
@@ -1675,6 +2018,29 @@
       </div>
     </div>
   </section>
+
+
+  <script>
+  // T2V video play/pause on click
+  document.querySelectorAll('.t2v-video-wrap').forEach(wrap => {
+    const video = wrap.querySelector('video');
+    const overlay = wrap.querySelector('.t2v-play-overlay');
+    
+    wrap.addEventListener('click', () => {
+      if (video.paused) {
+        video.play();
+        overlay.classList.add('hidden');
+      } else {
+        video.pause();
+        overlay.classList.remove('hidden');
+      }
+    });
+
+    video.addEventListener('ended', () => {
+      overlay.classList.remove('hidden');
+    });
+  });
+  </script>
 
   <!-- Citation -->
   <section id="citation" class="section-light">
@@ -1788,3 +2154,12 @@
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
